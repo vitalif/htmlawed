@@ -1,6 +1,6 @@
 // JS rewrite of http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
 
-htmLawed = {
+var htmLawed = {
     _flip: function(a)
     {
         var e = {};
@@ -51,15 +51,16 @@ htmLawed = {
             delete e.script;
         }
         var x = C.elements ? C.elements.replace(/\s+/g, '') : '*';
+        var v, m, i;
         if (x == '-*')
             e = {};
         else if (x.indexOf('*') < 0)
             e = htmLawed._flip(e.split(/,/));
         else if (x.length > 1)
         {
-            var re = /(?:^|-|\+)[^\-+]+?(?=-|\+|$)/g, v;
-            var m = {};
-            while (v = re.exec(x))
+            var re = /(?:^|-|\+)[^\-+]+?(?=-|\+|$)/g;
+            m = {};
+            while ((v = re.exec(x)))
                 m[v[0]] = true;
             for (v in m)
             {
@@ -76,16 +77,16 @@ htmLawed = {
         if (x['on*'])
         {
             delete x['on*'];
-            var v = { 'onblur':1, 'onchange':1, 'onclick':1, 'ondblclick':1, 'onfocus':1, 'onkeydown':1, 'onkeypress':1, 'onkeyup':1, 'onmousedown':1, 'onmousemove':1, 'onmouseout':1, 'onmouseover':1, 'onmouseup':1, 'onreset':1, 'onselect':1, 'onsubmit':1 };
-            for (var i in v)
+            v = { 'onblur':1, 'onchange':1, 'onclick':1, 'ondblclick':1, 'onfocus':1, 'onkeydown':1, 'onkeypress':1, 'onkeyup':1, 'onmousedown':1, 'onmousemove':1, 'onmouseout':1, 'onmouseover':1, 'onmouseup':1, 'onreset':1, 'onselect':1, 'onsubmit':1 };
+            for (i in v)
                 x[i] = true;
         }
         C.deny_attribute = x;
         // config URL
         x = C.schemes && C.schemes.length > 2 && C.schemes.indexOf(':') > 0 ? C.schemes.toLowerCase() : 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, telnet; *:file, http, https';
         C.schemes = {};
-        var m = x.replace(/\s+/g, '').split(';');
-        for (var v in m)
+        m = x.replace(/\s+/g, '').split(';');
+        for (v in m)
         {
             x = v.split(':', 2);
             if (x[1])
@@ -140,12 +141,12 @@ htmLawed = {
                 y = { "\x82":'&#8218;', "\x84":'&#8222;', "\x91":'&#8216;', "\x92":'&#8217;', "\x93":'&#8220;', "\x94":'&#8221;' };
             else
                 y = { "\x82":'\'', "\x84":'"', "\x91":'\'', "\x92":'\'', "\x93":'"', "\x94":'"' };
-            for (var i in y)
+            for (i in y)
                 x[i] = y[i];
             t = htmLawed._strtr(t, x);
         }
         if (C.cdata || C.comment)
-            t = t.replace(/<!(?:(?:--.*?--)|(?:\[CDATA\[.*?\]\]))>/g, htmLawed.hl_cmtcd)
+            t = t.replace(/<!(?:(?:--.*?--)|(?:\[CDATA\[.*?\]\]))>/g, htmLawed.hl_cmtcd);
         t = t.replace(/&/g, '&amp;').replace(/&amp;([A-Za-z][A-Za-z0-9]{1,30}|#(?:[0-9]{1,8}|[Xx][0-9A-Fa-f]{1,7}));/g, htmLawed.hl_ent);
         if (C.unique_ids && !htmLawed.hl_Ids)
             htmLawed.hl_Ids = {};
@@ -180,22 +181,22 @@ htmLawed = {
                 var v = p[k];
                 switch (k)
                 {
-                    case 'maxlen': if(l > v){o = 0;} break;
-                    case 'minlen': if(l < v){o = 0;} break;
-                    case 'maxval': if(parseFloat(tv) > v){o = 0;} break;
-                    case 'minval': if(parseFloat(tv) < v){o = 0;} break;
-                    case 'match': if(!v.exec(tv)){o = 0;} break;
-                    case 'nomatch': if(v.exec(tv)){o = 0;} break;
-                    case 'oneof':
-                        v = v.split('|');
-                        for (i = 0; i < v.length && v[i] != tv; i++) {}
-                        m = (i < v.length);
-                        break;
-                    case 'noneof':
-                        v = v.split('|');
-                        for (i = 0; i < v.length && v[i] != tv; i++) {}
-                        m = (i < v.length);
-                        break;
+                case 'maxlen': if(l > v){o = 0;} break;
+                case 'minlen': if(l < v){o = 0;} break;
+                case 'maxval': if(parseFloat(tv) > v){o = 0;} break;
+                case 'minval': if(parseFloat(tv) < v){o = 0;} break;
+                case 'match': if(!v.exec(tv)){o = 0;} break;
+                case 'nomatch': if(v.exec(tv)){o = 0;} break;
+                case 'oneof':
+                    v = v.split('|');
+                    for (i = 0; i < v.length && v[i] != tv; i++) {}
+                    o = (i < v.length);
+                    break;
+                case 'noneof':
+                    v = v.split('|');
+                    for (i = 0; i < v.length && v[i] != tv; i++) {}
+                    o = (i >= v.length);
+                    break;
                 }
                 if (!o)
                     break;
@@ -271,7 +272,7 @@ htmLawed = {
         if (cont.E[intag])
             return (!perf ? '' : htmLawed.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
         var inOk = getCont(intag);
-        var ok = [], q = []; // q = seq list of open non-empty ele
+        var ok = [], q = [], ql; // q = seq list of open non-empty ele
         var _ob = '';
         var r, s, e, a, x, p;
         t = t.split('<');
@@ -283,7 +284,7 @@ htmLawed = {
                 x = t[i];
             else
             {
-                [ all, s, e, a, x ] = r; // FIXME ES6
+                [ , s, e, a, x ] = r; // FIXME ES6
                 // close tag
                 if (s)
                 {
@@ -329,7 +330,7 @@ htmLawed = {
                     e = x = null;
                 }
                 // if no open ele, intag = parent; mostly immediate parent-child relation should hold
-                else if (!ql || !el.N[e] || !q.filter(_k => cont.N[k]).length)
+                else if (!ql || !el.N[e] || !q.filter(_k => cont.N[_k]).length)
                 {
                     if (!ok[e])
                     {
@@ -359,12 +360,12 @@ htmLawed = {
                 else
                 {
                     // nesting
-                    var add = '';
+                    add = '';
                     var q2 = [];
                     var _stop = 0;
                     for (var k = 0, kc = q.length; k < kc; k++)
                     {
-                        var d = q[k];
+                        d = q[k];
                         var ok2 = [];
                         if (cont.S[d])
                         {
@@ -439,7 +440,7 @@ htmLawed = {
         }
 
         // end
-        while (e = q.pop())
+        while ((e = q.pop()))
             _ob += '</'+e+'>';
         return _ob;
         // eof
@@ -474,7 +475,7 @@ htmLawed = {
         t = t[1];
         if (t[0] != '#')
         {
-            return (C.and_mark ? "\x06" : '&')+(htmLawed.ENT_U[t] ? t : (htmLawed.ENT[$t]
+            return (C.and_mark ? "\x06" : '&')+(htmLawed.ENT_U[t] ? t : (htmLawed.ENT[t]
                 ? (!C.named_entity ? '#'+(C.hexdec_entity > 1 ? 'x'+parseInt(htmLawed.ENT[t]).toString(16) : htmLawed.ENT[t]) : t)
                 : 'amp;'+t))+';';
         }
@@ -483,7 +484,7 @@ htmLawed = {
         if (n < 9 || (n > 13 && n < 32) || n == 11 || n == 12 || (n > 126 && n < 160 && n != 133) ||
             (n > 55295 && (n < 57344 || (n > 64975 && n < 64992) || n == 65534 || n == 65535 || n > 1114111)))
         {
-            return (C.and_mark ? "\x06" : '&')+"amp;#{$t};";
+            return (C.and_mark ? "\x06" : '&')+"amp;#"+t+";";
         }
         return (C.and_mark ? "\x06" : '&')+'#'+(((/^\d+$/.exec(t) && C.hexdec_entity < 2) || !C.hexdec_entity) ? n : 'x'+n.toString(16))+';';
         // eof
@@ -505,7 +506,7 @@ htmLawed = {
         if (c['!'] && p.substr(0, 7) != d)
             p = d+p;
         if (c['*'] || /^[#;?]/.exec(p) || p.substr(0, 7) == d)
-            return b+o+a; // All ok, frag, query, param
+            return b+p+a; // All ok, frag, query, param
         var m = /^([^:?[@!$()*,=\/\'\]]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a)./i.exec(p); // '
         if (m && !c[m[1].toLowerCase()]) // Denied prot
             return b+d+p+a;
@@ -527,10 +528,10 @@ htmLawed = {
                     p = C.base_url+p;
                 else
                 {
-                    var m = /^([a-zA-Z\d\-+.]+:\/\/[^\/]+)(.*)/.exec(C.base_url);
-                    p = (m[2]+p).replace(/(?<=\/)\.\//g, '');
-                    while (/(?<=\/)([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//.exec(p))
-                        p = p.replace(/(?<=\/)([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//g, '');
+                    m = /^([a-zA-Z\d\-+.]+:\/\/[^\/]+)(.*)/.exec(C.base_url);
+                    p = (m[2]+p).replace(/\/\.\//g, '/');
+                    while (/\/([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//.exec(p))
+                        p = p.replace(/\/([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//g, '/');
                     p = m[1]+p;
                 }
             }
@@ -543,7 +544,7 @@ htmLawed = {
         try
         {
             var re = new RegExp(p);
-            return true;
+            return re && true;
         }
         catch (e)
         {
@@ -554,24 +555,24 @@ htmLawed = {
     {
         // final $spec
         var s = {};
-        t = t.trim().replace(/"(?>(`.|[^\"])*)"/g, function(m)
+        t = t.trim().replace(/"(`.|[^\"])*"/g, function(m)
         {
             m = htmLawed._strtr(m[0], {';': "\x01", '|':"\x02", '~':"\x03", ' ':"\x04", ',':"\x05", '/':"\x06", '(':"\x07", ')':"\x08", '`"':'"'});
             return m.substr(1, m.length-2);
         }).replace(/\s+/g, '');
         t = t.split(/;/);
-        var e, a;
+        var e, a, _i;
         for (var i = t.length-1; i >= 0; i--)
         {
             var w = t[i];
             if (!w || (e = w.indexOf('=')) < 0 || (a = w.substr(e+1)) === '')
                 continue;
-            var y = {}, n = {};
+            var x, y = {}, n = {}, p, v, m;
             a = a.split(',');
-            for (var _i = 0; _i < a.length; _i++)
+            for (_i = 0; _i < a.length; _i++)
             {
-                var v = a[_i];
-                var m = /^([a-z:\-\*]+)(?:\((.*?)\))?/i.exec(v);
+                v = a[_i];
+                m = /^([a-z:\-\*]+)(?:\((.*?)\))?/i.exec(v);
                 if (!m)
                     continue;
                 if (m[1] === '-*')
@@ -606,13 +607,13 @@ htmLawed = {
                     delete y[x].nomatch;
             }
             var _y = 0;
-            for (var _i in y)
+            for (_i in y)
             {
                 _y = 1;
                 break;
             }
             var _n = 0;
-            for (var _i in n)
+            for (_i in n)
             {
                 _n = 1;
                 break;
@@ -620,9 +621,9 @@ htmLawed = {
             if (!_y && !_n)
                 continue;
             w = w.substr(0, e);
-            for (var _i = 0; _i < w.length; _i++)
+            for (_i = 0; _i < w.length; _i++)
             {
-                var v = w[_i].toLowerCase();
+                v = w[_i].toLowerCase();
                 if (v === '')
                     continue;
                 if (_y)
@@ -837,7 +838,7 @@ htmLawed = {
         '&#x52;':'r', '&#82;':'r', '&#x72;':'r', '&#114;':'r',
         '&#x4c;':'l', '&#76;':'l', '&#x6c;':'l', '&#108;':'l',
         '&#x28;':'(', '&#40;':'(', '&#x29;':')', '&#41;':')',
-        '&#x20;':':', '&#32;':':', '&#x22;':'"', '&#34;':'"',
+        '&#x3a;':':', '&#58;':':', '&#x22;':'"', '&#34;':'"',
         '&#x27;':"'", '&#39;':"'", '&#x2f;':'/', '&#47;':'/',
         '&#x2a;':'*', '&#42;':'*', '&#x5c;':'\\', '&#92;':'\\'
     },
@@ -951,16 +952,17 @@ htmLawed = {
         // clean attrs
         var rl = S[e] || {};
         a = {};
-        nfr = 0;
-        for (var k in aA)
+        var nfr = 0;
+        var k, v;
+        for (k in aA)
         {
-            var v = aA[k];
+            v = aA[k];
             if (((C.deny_attribute['*'] ? C.deny_attribute[k] : !C.deny_attribute[k]) &&
                 (TAG.N[k] && TAG.N[k][e] || (TAG.NU[k] && !TAG.NU[k][e])) &&
                 (!rl.n || !rl.n[k] && !rl.n['*'])) || rl[k])
             {
                 if (TAG.NE[k])
-                    y = k;
+                    v = k;
                 else if (lcase && ((e != 'button' || e != 'input') || k == 'type'))
                 {
                     // Rather loose but ?not cause issues
@@ -1019,7 +1021,7 @@ htmLawed = {
         // rqd attr
         if (TAG.AR[e])
         {
-            for (var k in TAG.AR[e])
+            for (k in TAG.AR[e])
                 if (!a[k])
                     a[k] = TAG.AR[e][k] || k;
         }
@@ -1028,16 +1030,16 @@ htmLawed = {
         if (depTr)
         {
             var c = [];
-            for (var k in a)
+            for (k in a)
             {
-                var v = a[k];
+                v = a[k];
                 if (k == 'style' || !TAG.ND[k] || !TAG.ND[k][e])
                     continue;
                 if (k == 'align')
                 {
                     delete a[k];
                     if (e == 'img' && (v == 'left' || v == 'right'))
-                        c.push('float: '+$v);
+                        c.push('float: '+v);
                     else if ((e == 'div' || e == 'table') && v == 'center')
                         c.push('margin: auto');
                     else
@@ -1127,8 +1129,8 @@ htmLawed = {
         if (!C.hook_tag)
         {
             aA = '';
-            for (var k in a)
-                aA += ' '+k+'="'+v+'"';
+            for (k in a)
+                aA += ' '+k+'="'+a[k]+'"';
             return '<'+e+aA+(TAG.E[e] ? ' /' : '')+'>';
         }
         return C.hook_tag(e, a);
@@ -1150,6 +1152,7 @@ htmLawed = {
         else if (e == 'font')
         {
             var a2 = '';
+            var m;
             while ((m = /(^|\s)(color|size)\s*=\s*('|")?(.+?)(\3|\s|$)/i.exec(a))) // '
             {
                 a = a.replace(m[0], ' ');
@@ -1272,7 +1275,11 @@ htmLawed = {
             t = t.replace(/\n/g, l);
         return htmLawed._strtr(t, {"\x01":'<', "\x02":'>', "\x03":"\n", "\x04":"\r", "\x05":"\t", "\x07":' '});
         // eof
+    },
+    hl_version: function()
+    {
+        return '1.1.22';
     }
-}
+};
 
 console.log(htmLawed.sanitize('<a href="javascript:alert()">aahah</a>'));
