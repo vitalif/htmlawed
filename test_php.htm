@@ -1,0 +1,42 @@
+<img alt="&lt;img onmouseover=confirm(1)//" src="src" />
+'';!--"=&amp;{()}<br />
+<img src="denied:javascript%3Aalert('xss');" alt="image" /><br />
+<img src="denied:javascript:alert('xss');" alt="image" /><br />
+<img src="denied:java script:alert('xss');" alt="image" /><br />
+<img src="denied:&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;" alt="image" /><br />
+<span style="color: #FF6699'onmouseover='alert(1)//;">test</span>
+<span style="color: img//onerror='alert`www.ptsecurity.com`'src=Psych0tr1a;">
+<br />
+<br />
+<br />
+&lt;!--[if gte IE 4]&gt;alert('xss');&lt;![endif]--&gt;<br />
+" src="http://ha.ckers.org/xss.js"&gt;<br />
+<strong>Bad in PHP version without safe:</strong> " ";alert(window.location.href);//&gt;<br />
+<br />
+<a style=";-moz-binding:url(denied:http://lukasz.pilorz.net/xss/xss.xml#xss)" href="http://example.com">test</a><br />
+<strong>Bad IE7:</strong> <a href="http://x&amp;x=%22+style%3d%22background-image%3a+expression%28alert %28%27xss%3f%29%29">x</a><br />
+<strong>Opera:</strong> <a href="denied:\xE2\x80\x83javascript:alert(123)">link</a>
+<strong>Bad IE7:</strong> <a style="color:expr comment*/ession(alert(document.domain))">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: %45xpression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: expr%45ssion(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp  */ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp   */ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp/ * * /ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  x */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  */ */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="width:  *** *;;;;;;*/  */(alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="padding:10px; background: */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="background: huh   */ */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="background: */ (alert('xss'));background: */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> exp/*<a style="no ss:noxss(&quot;*/ &quot;);xss:ex XSS*/  /pression(alert(&quot;XSS&quot;))">x</a><br />
+<strong>Bad IE7:</strong> <a style="background:expre sion(alert('xss'));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="background:expre sion(alert('xss'));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="color:  065  078  070  072  065  073  073  069  06f  06e  028  061  06c  065  072  074  028  031  029  029">test</a><br />
+<strong>Bad IE7:</strong> <a style="xss:e #48;&#48;&#55;&#56;pression(window.x?0:(alert(/XSS/),window.x=1));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="background:url('denied:java script:eval(document.all.mycode.expr)')">hi</a><br />
+</span>

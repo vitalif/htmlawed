@@ -1,6 +1,7 @@
 // JS rewrite of http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
 
-var htmLawed = {
+var htmLawed = module.exports =
+{
     _flip: function(a)
     {
         var e = {};
@@ -97,7 +98,7 @@ var htmLawed = {
         if (C.safe && !C.schemes.style)
             C.schemes.style = { '!': 1 };
         C.abs_url = C.abs_url !== undefined ? C.abs_url : 0;
-        if (C.base_url === undefined || !/^[a-zA-Z\d.+\-]+:\/\/[^\/]+\/(.+?\/)?$/.exec(C.base_url))
+        if (C.base_url === undefined || !/^[a-zA-Z\d\.+\-]+:\/\/[^\/]+\/([\s\S]+?\/)?$/.exec(C.base_url))
             C.base_url = C.abs_url = 0;
         // config rest
         C.and_mark = !C.and_mark ? 0 : 1;
@@ -146,18 +147,18 @@ var htmLawed = {
             t = htmLawed._strtr(t, x);
         }
         if (C.cdata || C.comment)
-            t = t.replace(/<!(?:(?:--.*?--)|(?:\[CDATA\[.*?\]\]))>/g, htmLawed.hl_cmtcd);
+            t = t.replace(/<!(?:(?:--[\s\S]*?--)|(?:\[CDATA\[[\s\S]*?\]\]))>/g, htmLawed.hl_cmtcd);
         t = t.replace(/&/g, '&amp;').replace(/&amp;([A-Za-z][A-Za-z0-9]{1,30}|#(?:[0-9]{1,8}|[Xx][0-9A-Fa-f]{1,7}));/g, htmLawed.hl_ent);
         if (C.unique_ids && !htmLawed.hl_Ids)
             htmLawed.hl_Ids = {};
         if (C.hook)
             t = C.hook(t, C, S);
         // main
-        t = t.replace(/<(?:(?:\s|$)|(?:[^>]*(?:>|$)))|>/m, htmLawed.hl_tag);
+        t = t.replace(/<(?:(?:\s|$)|(?:[^>]*(?:>|$)))|>/gm, htmLawed.hl_tag);
         if (C.balance)
             t = htmLawed.hl_bal(t, C.keep_bad, C.parent);
         if ((C.cdata || C.comment) && t.indexOf("\x01") >= 0)
-            t = this._strtr({ "\x01": '', "\x02": '', "\x03": '&', "\x04": '<', "\x05": '>' });
+            t = htmLawed._strtr(t, { "\x01": '', "\x02": '', "\x03": '&', "\x04": '<', "\x05": '>' });
         if (C.tidy)
             t = htmLawed.hl_tidy(t, C.tidy, C.parent);
         return t;
@@ -235,7 +236,7 @@ var htmLawed = {
 
         function getCont(intag)
         {
-            var inOk;
+            var inOk = {};
             if (cont.S[intag])
                 inOk = cont.S[intag];
             else if (cont.I[intag])
@@ -272,18 +273,19 @@ var htmLawed = {
         if (cont.E[intag])
             return (!perf ? '' : htmLawed.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
         var inOk = getCont(intag);
-        var ok = [], q = [], ql; // q = seq list of open non-empty ele
+        var ok = {}, q = [], ql; // q = seq list of open non-empty ele
         var _ob = '';
         var r, s, e, a, x, p;
         t = t.split('<');
         for (var i = 0, ci = t.length; i < ci; i++)
         {
             // get markup
-            r = /^(\/?)([a-z1-6]+)([^>]*)>(.*)/.exec(t[i]);
+            r = /^(\/?)([a-z1-6]+)([^>]*)>([\s\S]*)$/.exec(t[i]);
             if (!r)
                 x = t[i];
             else
             {
+                //s = r[1]; e = r[2]; a = r[3]; x = r[4];
                 [ , s, e, a, x ] = r; // FIXME ES6
                 // close tag
                 if (s)
@@ -350,7 +352,7 @@ var htmLawed = {
                     }
                 }
                 // specific parent-child
-                else if (cont.S[p][e])
+                else if (cont.S[p] && cont.S[p][e])
                 {
                     if (!cont.E[e])
                         q.push(e);
@@ -419,7 +421,7 @@ var htmLawed = {
             // bad tags, & ele content
             if (e && (perf == 1 || (ok['#pcdata'] && (perf == 3 || perf == 5))))
                 _ob += '&lt;'+s+e+a+'&gt;';
-            if (x != '')
+            if (x !== '' && x !== null)
             {
                 if (x.trim().length > 0 && ((ql && cont.B[p]) || (cont.B[intag] && !ql))) // FIXME trim
                     _ob += '<div>'+x+'</div>';
@@ -448,9 +450,8 @@ var htmLawed = {
     hl_cmtcd: function(t)
     {
         // comment/CDATA sec handler
-        t = t[0];
         var n = t[3] == '-' ? 'comment' : 'cdata';
-        var v = v = htmLawed.C[n];
+        var v = htmLawed.C[n];
         if (!v) return t;
         if (v == 1) return '';
         if (n == 'comment')
@@ -468,11 +469,10 @@ var htmLawed = {
     },
     ENT: { 'fnof':'402', 'Alpha':'913', 'Beta':'914', 'Gamma':'915', 'Delta':'916', 'Epsilon':'917', 'Zeta':'918', 'Eta':'919', 'Theta':'920', 'Iota':'921', 'Kappa':'922', 'Lambda':'923', 'Mu':'924', 'Nu':'925', 'Xi':'926', 'Omicron':'927', 'Pi':'928', 'Rho':'929', 'Sigma':'931', 'Tau':'932', 'Upsilon':'933', 'Phi':'934', 'Chi':'935', 'Psi':'936', 'Omega':'937', 'alpha':'945', 'beta':'946', 'gamma':'947', 'delta':'948', 'epsilon':'949', 'zeta':'950', 'eta':'951', 'theta':'952', 'iota':'953', 'kappa':'954', 'lambda':'955', 'mu':'956', 'nu':'957', 'xi':'958', 'omicron':'959', 'pi':'960', 'rho':'961', 'sigmaf':'962', 'sigma':'963', 'tau':'964', 'upsilon':'965', 'phi':'966', 'chi':'967', 'psi':'968', 'omega':'969', 'thetasym':'977', 'upsih':'978', 'piv':'982', 'bull':'8226', 'hellip':'8230', 'prime':'8242', 'Prime':'8243', 'oline':'8254', 'frasl':'8260', 'weierp':'8472', 'image':'8465', 'real':'8476', 'trade':'8482', 'alefsym':'8501', 'larr':'8592', 'uarr':'8593', 'rarr':'8594', 'darr':'8595', 'harr':'8596', 'crarr':'8629', 'lArr':'8656', 'uArr':'8657', 'rArr':'8658', 'dArr':'8659', 'hArr':'8660', 'forall':'8704', 'part':'8706', 'exist':'8707', 'empty':'8709', 'nabla':'8711', 'isin':'8712', 'notin':'8713', 'ni':'8715', 'prod':'8719', 'sum':'8721', 'minus':'8722', 'lowast':'8727', 'radic':'8730', 'prop':'8733', 'infin':'8734', 'ang':'8736', 'and':'8743', 'or':'8744', 'cap':'8745', 'cup':'8746', 'int':'8747', 'there4':'8756', 'sim':'8764', 'cong':'8773', 'asymp':'8776', 'ne':'8800', 'equiv':'8801', 'le':'8804', 'ge':'8805', 'sub':'8834', 'sup':'8835', 'nsub':'8836', 'sube':'8838', 'supe':'8839', 'oplus':'8853', 'otimes':'8855', 'perp':'8869', 'sdot':'8901', 'lceil':'8968', 'rceil':'8969', 'lfloor':'8970', 'rfloor':'8971', 'lang':'9001', 'rang':'9002', 'loz':'9674', 'spades':'9824', 'clubs':'9827', 'hearts':'9829', 'diams':'9830', 'apos':'39',  'OElig':'338', 'oelig':'339', 'Scaron':'352', 'scaron':'353', 'Yuml':'376', 'circ':'710', 'tilde':'732', 'ensp':'8194', 'emsp':'8195', 'thinsp':'8201', 'zwnj':'8204', 'zwj':'8205', 'lrm':'8206', 'rlm':'8207', 'ndash':'8211', 'mdash':'8212', 'lsquo':'8216', 'rsquo':'8217', 'sbquo':'8218', 'ldquo':'8220', 'rdquo':'8221', 'bdquo':'8222', 'dagger':'8224', 'Dagger':'8225', 'permil':'8240', 'lsaquo':'8249', 'rsaquo':'8250', 'euro':'8364', 'nbsp':'160', 'iexcl':'161', 'cent':'162', 'pound':'163', 'curren':'164', 'yen':'165', 'brvbar':'166', 'sect':'167', 'uml':'168', 'copy':'169', 'ordf':'170', 'laquo':'171', 'not':'172', 'shy':'173', 'reg':'174', 'macr':'175', 'deg':'176', 'plusmn':'177', 'sup2':'178', 'sup3':'179', 'acute':'180', 'micro':'181', 'para':'182', 'middot':'183', 'cedil':'184', 'sup1':'185', 'ordm':'186', 'raquo':'187', 'frac14':'188', 'frac12':'189', 'frac34':'190', 'iquest':'191', 'Agrave':'192', 'Aacute':'193', 'Acirc':'194', 'Atilde':'195', 'Auml':'196', 'Aring':'197', 'AElig':'198', 'Ccedil':'199', 'Egrave':'200', 'Eacute':'201', 'Ecirc':'202', 'Euml':'203', 'Igrave':'204', 'Iacute':'205', 'Icirc':'206', 'Iuml':'207', 'ETH':'208', 'Ntilde':'209', 'Ograve':'210', 'Oacute':'211', 'Ocirc':'212', 'Otilde':'213', 'Ouml':'214', 'times':'215', 'Oslash':'216', 'Ugrave':'217', 'Uacute':'218', 'Ucirc':'219', 'Uuml':'220', 'Yacute':'221', 'THORN':'222', 'szlig':'223', 'agrave':'224', 'aacute':'225', 'acirc':'226', 'atilde':'227', 'auml':'228', 'aring':'229', 'aelig':'230', 'ccedil':'231', 'egrave':'232', 'eacute':'233', 'ecirc':'234', 'euml':'235', 'igrave':'236', 'iacute':'237', 'icirc':'238', 'iuml':'239', 'eth':'240', 'ntilde':'241', 'ograve':'242', 'oacute':'243', 'ocirc':'244', 'otilde':'245', 'ouml':'246', 'divide':'247', 'oslash':'248', 'ugrave':'249', 'uacute':'250', 'ucirc':'251', 'uuml':'252', 'yacute':'253', 'thorn':'254', 'yuml':'255' },
     ENT_U: { 'quot':1, 'amp':1, 'lt':1, 'gt':1 },
-    hl_ent: function(t)
+    hl_ent: function(all, t)
     {
         // entity handler
         var C = htmLawed.C;
-        t = t[1];
         if (t[0] != '#')
         {
             return (C.and_mark ? "\x06" : '&')+(htmLawed.ENT_U[t] ? t : (htmLawed.ENT[t]
@@ -507,7 +507,7 @@ var htmLawed = {
             p = d+p;
         if (c['*'] || /^[#;?]/.exec(p) || p.substr(0, 7) == d)
             return b+p+a; // All ok, frag, query, param
-        var m = /^([^:?[@!$()*,=\/\'\]]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a)./i.exec(p); // '
+        var m = /^([^:?[@!$()*,=\/\'\]]+?)(:|&#(58|x3a);|%3a|\\0{0,4}3a)[\s\S]/i.exec(p); // '
         if (m && !c[m[1].toLowerCase()]) // Denied prot
             return b+d+p+a;
         if (C.abs_url)
@@ -523,15 +523,15 @@ var htmLawed = {
                 if (p.substr(0, 2) == '//')
                     p = C.base_url.substr(0, C.base_url.indexOf(':')+1)+p;
                 else if (p[0] == '/')
-                    p = C.base_url.replace(/(^.+?:\/\/[^\/]+)(.*)/, '$1')+p;
+                    p = C.base_url.replace(/(^[\s\S]+?:\/\/[^\/]+)([\s\S]*)/, '$1')+p;
                 else if (!/^[\.\/]/.exec(p))
                     p = C.base_url+p;
                 else
                 {
-                    m = /^([a-zA-Z\d\-+.]+:\/\/[^\/]+)(.*)/.exec(C.base_url);
+                    m = /^([a-zA-Z\d\-+\.]+:\/\/[^\/]+)([\s\S]*)/.exec(C.base_url);
                     p = (m[2]+p).replace(/\/\.\//g, '/');
-                    while (/\/([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//.exec(p))
-                        p = p.replace(/\/([^\/]{3,}|[^\/.]+?|\.[^\/.]|[^\/.]\.)\/\.\.\//g, '/');
+                    while (/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//.exec(p))
+                        p = p.replace(/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//g, '/');
                     p = m[1]+p;
                 }
             }
@@ -555,7 +555,7 @@ var htmLawed = {
     {
         // final $spec
         var s = {};
-        t = t.trim().replace(/"(`.|[^\"])*"/g, function(m)
+        t = t.trim().replace(/"(`[\s\S]|[^\"])*"/g, function(m)
         {
             m = htmLawed._strtr(m[0], {';': "\x01", '|':"\x02", '~':"\x03", ' ':"\x04", ',':"\x05", '/':"\x06", '(':"\x07", ')':"\x08", '`"':'"'});
             return m.substr(1, m.length-2);
@@ -572,7 +572,7 @@ var htmLawed = {
             for (_i = 0; _i < a.length; _i++)
             {
                 v = a[_i];
-                m = /^([a-z:\-\*]+)(?:\((.*?)\))?/i.exec(v);
+                m = /^([a-z:\-\*]+)(?:\(([\s\S]*?)\))?/i.exec(v);
                 if (!m)
                     continue;
                 if (m[1] === '-*')
@@ -929,7 +929,7 @@ var htmLawed = {
                 }
                 break;
             case 2: // Val
-                m = /^((?:"[^\"]*")|(?:'[^\']*\')|(?:\s*[^\s"']+))(.*)/.exec(a);
+                m = /^((?:"[^\"]*")|(?:'[^\']*\')|(?:\s*[^\s"']+))([\s\S]*)/.exec(a);
                 if (m)
                 {
                     a = m[2].replace(/^\s+/, '');
@@ -973,8 +973,11 @@ var htmLawed = {
                 {
                     if (v.indexOf('&#') >= 0)
                         v = htmLawed._strtr(v, htmLawed.STYLE_ENT);
-                    v = v.replace(/(url(?:\()(?: )*(?:'|"|&(?:quot|apos);)?)(.+?)((?:"|'|&(?:quot|apos);)?(?: )*(?:\)))/gi, htmLawed.hl_prot);
-                    v = C.css_expression ? v.replace(/\\\S|(\/|(%2f))(\*|(%2a))/gi).replace(/expression/gi, ' ') : v;
+                    v = v.replace(/(url(?:\()(?: )*(?:'|"|&(?:quot|apos);)?)([\s\S]+?)((?:"|'|&(?:quot|apos);)?(?: )*(?:\)))/gi, function(m, m1, m2, m3)
+                    {
+                        return htmLawed.hl_prot([ m, m1, m2, m3 ]);
+                    });
+                    v = !C.css_expression ? v.replace(/\\\S|(\/|(%2f))(\*|(%2a))/gi, ' ').replace(/expression/gi, ' ') : v;
                 }
                 else if (TAG.NP[k] || k.indexOf('src') >= 0 || k[0] == 'o')
                 {
@@ -1063,7 +1066,7 @@ var htmLawed = {
                     a.type = 'text/'+v.toLowerCase();
                 else if (k == 'name')
                 {
-                    if (!a.id && /^[a-zA-Z][a-zA-Z\d.:_\-]*$/.exec(v))
+                    if (!a.id && /^[a-zA-Z][a-zA-Z\d\.:_\-]*$/.exec(v))
                         a.id = v;
                     if (!(C.no_deprecated_attr == 2 || (e != 'a' && e != 'map')))
                     {
@@ -1102,7 +1105,7 @@ var htmLawed = {
         // unique ID
         if (C.unique_ids && a.id)
         {
-            if (!/^[A-Za-z][A-Za-z0-9_\-.:]*$/.exec(a.id) ||
+            if (!/^[A-Za-z][A-Za-z0-9_\-\.:]*$/.exec(a.id) ||
                 htmLawed.hl_Ids[a.id] && C.unique_ids == 1)
                 delete a.id;
             else
@@ -1153,7 +1156,7 @@ var htmLawed = {
         {
             var a2 = '';
             var m;
-            while ((m = /(^|\s)(color|size)\s*=\s*('|")?(.+?)(\3|\s|$)/i.exec(a))) // '
+            while ((m = /(^|\s)(color|size)\s*=\s*('|")?([\s\S]+?)(\3|\s|$)/i.exec(a))) // '
             {
                 a = a.replace(m[0], ' ');
                 m[4] = m[4].trim();
@@ -1196,9 +1199,9 @@ var htmLawed = {
         {
             return m[1]+htmLawed._strtr(m[3], {'<': "\x01", '>':"\x02", "\n":"\x03", "\r":"\x04", "\t":"\x05", ' ':"\x07"})+m[4];
         };
-        t = t.replace(/(<(!\[CDATA\[))(.+?)(\]\]>)/g, _repl)
-            .replace(/(<(!--))(.+?)(-->)/g, _repl)
-            .replace(/(<(pre|script|textarea)[^>]*?>)(.+?)(<\/\2>)/g, _repl)
+        t = t.replace(/(<(!\[CDATA\[))([\s\S]+?)(\]\]>)/g, _repl)
+            .replace(/(<(!--))([\s\S]+?)(-->)/g, _repl)
+            .replace(/(<(pre|script|textarea)[^>]*?>)([\s\S]+?)(<\/\2>)/g, _repl)
             .replace(/\s+/g, ' ');
         if (w == -1)
             return htmLawed._strtr(t, {"\x01":'<', "\x02":'>', "\x03":"\n", "\x04":"\r", "\x05":"\t", "\x07":' '});
@@ -1281,5 +1284,3 @@ var htmLawed = {
         return '1.1.22';
     }
 };
-
-console.log(htmLawed.sanitize('<a href="javascript:alert()">aahah</a>'));
