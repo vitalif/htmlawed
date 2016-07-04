@@ -89,7 +89,7 @@ var htmLawed = module.exports =
         m = x.replace(/\s+/g, '').split(';');
         for (v in m)
         {
-            x = v.split(':', 2);
+            x = m[v].split(':', 2);
             if (x[1])
                 C.schemes[x[0]] = htmLawed._flip(x[1].split(','));
         }
@@ -304,7 +304,7 @@ var htmLawed = module.exports =
                     else
                     {
                         var add = ''; // Nesting - close open tags that need to be
-                        for (var j = 0, cj = q.length; j < cj; j++)
+                        while (q.length)
                         {
                             var d = q.pop();
                             if (d == e)
@@ -368,18 +368,20 @@ var htmLawed = module.exports =
                     for (var k = 0, kc = q.length; k < kc; k++)
                     {
                         d = q[k];
-                        var ok2 = [];
                         if (cont.S[d])
                         {
                             q2.push(d);
                             continue;
                         }
-                        ok2 = cont.I[d] ? el.I : el.F;
+                        var ok2 = cont.I[d] ? el.I : el.F;
                         if (cont.O[d])
                             ok2 = { ...ok2, ...cont.O[d] };
                         if (cont.N[d])
+                        {
+                            ok2 = { ...ok2 };
                             for (var _k in cont.N[d])
                                 delete ok2[_k];
+                        }
                         if (!ok2[e])
                         {
                             if (!k && !inOk[e])
@@ -838,7 +840,7 @@ var htmLawed = module.exports =
         '&#x52;':'r', '&#82;':'r', '&#x72;':'r', '&#114;':'r',
         '&#x4c;':'l', '&#76;':'l', '&#x6c;':'l', '&#108;':'l',
         '&#x28;':'(', '&#40;':'(', '&#x29;':')', '&#41;':')',
-        '&#x3a;':':', '&#58;':':', '&#x22;':'"', '&#34;':'"',
+        '&#x3a;':':', '&#58;':':', '&#x22;':'"', '&#34;':'"', // FIXME PHP version has bug here: bad codes for ':'
         '&#x27;':"'", '&#39;':"'", '&#x2f;':'/', '&#47;':'/',
         '&#x2a;':'*', '&#42;':'*', '&#x5c;':'\\', '&#92;':'\\'
     },
@@ -1165,7 +1167,7 @@ var htmLawed = module.exports =
                 else if ((m = htmLawed.FONT_SIZE[m[4]]))
                     a2 += ' font-size: '+m.replace(/"/g, "'")+';'; // '
             }
-            while ((m = /(^|\s)face\s*=\s*('|")?([^=]+?)\2/i.exec(a) || /(^|\s)face\s*=(\s*)(\S+)/i.exec(a))) // '
+            while ((m = /(^|\s)face\s*=\s*('|")([^=]+)\2/i.exec(a) || /(^|\s)face\s*=(\s*)(\S+)/i.exec(a))) // FIXME: PHP version has bug here: ("|')?
             {
                 a = a.replace(m[0], ' ');
                 a2 += ' font-family: '+m[3].trim().replace(/"/g, "'")+';'; // '
