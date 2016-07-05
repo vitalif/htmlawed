@@ -1,0 +1,23 @@
+{
+  "author": {
+    "name": "Vitaliy Filippov",
+    "email": "vitalif@yourcmc.ru",
+    "url": "http://yourcmc.ru/wiki/"
+  },
+  "name": "htmlawed",
+  "description": "JS port of htmLawed HTML filter library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitalif/htmlawed"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-plugin-transform-es2015-destructuring": "^6.9.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "eslint": "^3.0.0"
+  },
+  "scripts": {
+  }
+}
