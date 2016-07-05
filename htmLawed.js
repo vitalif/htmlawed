@@ -161,8 +161,8 @@ var htmLawed = module.exports =
             t = htmLawed._strtr(t, { "\x01": '', "\x02": '', "\x03": '&', "\x04": '<', "\x05": '>' });
         if (C.tidy)
             t = htmLawed.hl_tidy(t, C.tidy, C.parent);
-        return t;
         // eof
+        return t;
     },
     hl_attrval: function(a, t, p)
     {
@@ -208,10 +208,10 @@ var htmLawed = module.exports =
         return (r.length > 0 ? r.join(s) : (p['default'] || 0));
         // eof
     },
-    hl_bal: function(t, perf, intag)
+    hl_bal: function(t, keep_bad, intag)
     {
-        if (perf === undefined)
-            perf = 1;
+        if (keep_bad === undefined)
+            keep_bad = 1;
         // balance tags
         // by content
         var cont = {};
@@ -271,7 +271,7 @@ var htmLawed = module.exports =
         // intag sets allowed child
         intag = ((el.F[intag] && intag != '#pcdata') || el.O[intag]) ? intag : 'div';
         if (cont.E[intag])
-            return (!perf ? '' : htmLawed.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+            return (!keep_bad ? '' : htmLawed.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
         var inOk = getCont(intag);
         var ok = {}, q = [], ql; // q = seq list of open non-empty ele
         var _ob = '';
@@ -421,13 +421,13 @@ var htmLawed = module.exports =
                 delete cont.I['ins'];
             }
             // bad tags, & ele content
-            if (e && (perf == 1 || (ok['#pcdata'] && (perf == 3 || perf == 5))))
+            if (e && (keep_bad == 1 || (ok['#pcdata'] && (keep_bad == 3 || keep_bad == 5))))
                 _ob += '&lt;'+s+e+a+'&gt;';
             if (x !== '' && x !== null)
             {
                 if (x.trim().length > 0 && ((ql && cont.B[p]) || (cont.B[intag] && !ql))) // FIXME trim
                     _ob += '<div>'+x+'</div>';
-                else if (perf < 3 || ok['#pcdata'])
+                else if (keep_bad < 3 || ok['#pcdata'])
                     _ob += x;
                 else if (x.indexOf("\x02\x04") >= 0)
                 {
@@ -435,10 +435,10 @@ var htmLawed = module.exports =
                     for (var _i = 0; _i < x.length; _i++)
                     {
                         var v = x[_i];
-                        _ob += v.substr(0, 2) == "\x01\x02" ? v : (perf > 4 ? v.replace(/\S+/g, '') : '');
+                        _ob += v.substr(0, 2) == "\x01\x02" ? v : (keep_bad > 4 ? v.replace(/\S+/g, '') : '');
                     }
                 }
-                else if (perf > 4)
+                else if (keep_bad > 4)
                     _ob += x.replace(/\S+/g, '');
             }
         }

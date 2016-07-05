@@ -1,0 +1,450 @@
+/*
+htmLawed_TESTCASE.txt, 27 February 2016
+htmLawed 1.1.22, 5 March 2016
+Copyright Santosh Patnaik
+Dual licensed with LGPL 3 and GPL 2+
+A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed
+*/
+
+This file has UTF-8-encoded text with both correct and incorrect/malformed HTML/XHTML code snippets to test htmLawed (test cases/samples). The entire text may also be used as a unit.
+
+************************************************
+when viewing this file in a web browser, set the
+character encoding to Unicode/UTF-8
+************************************************
+
+--------------------- start --------------------
+
+<em>Try different $config and $spec values. Some text even when filtered in will not be displayed in a rendered web-page</em><br />
+
+<h6>Attributes</h6>
+
+<strong>Xml:lang:</strong><a lang="en" xml:lang="en"></a>, <a lang="en"></a>, <a xml:lang="en"></a><br />
+<strong>Standard, predefined value, or empty attribute:</strong> <input type="text" disabled="disabled" />, <input type="text" disabled="disabled" />, <input type="text" disabled="disabled" /><br />
+<strong>Required:</strong> <img src="src" alt="image" />, <img alt="image" src="src" /><br />
+<strong>Quote &amp; space variation:</strong> <a id="id1" name="xy">a</a>, <a id="id2" name="xy">a</a>, <a id="id3" name="n">a</a><br />
+<strong>Invalid:</strong> <a id="id4">a</a><br />
+<strong>Duplicated:</strong> <a id="id6">a</a><br />
+<strong>Deprecated:</strong> <a id="id7" target="self" name="n">a</a>, <hr style="border-style: none; border: 0; background-color: gray; color: gray;" /><br />
+<strong>Casing:</strong> <a href=""></a><br />
+<strong>Custom:</strong> <img alt="image" src="src" /><br />
+<strong>Data-*:</strong> <a>a</a><br />
+<strong>Admin-restricted?:</strong> <a href="x"></a>
+
+<h6>Attribute values</h6>
+
+<strong>Duplicate ID value:</strong><a id="id8"></a>, <a id="my_id8"></a>, <a></a><br />
+(try 'my_' for prefix)<br />
+<strong>Double-quotes in value:</strong><a title="ab"></a>, <a title="ab"></a>, <a title="ab&quot;c"></a><br />
+(try filter for CSS expression)<br />
+<strong>CSS expression</strong>: <div style="prop: ();"></div><div style="prop: ()"></div><div style="prop:  ();"></div><div style="prop :  ()"></div><div style="prop: (js);"></div><div style="prop: (js;)"></div><div style="prop:  ('js');"></div><div style="prop : expr ession('js':)"></div><div style="prop: ( 'js&#x40; );"></div><br />
+<strong>Other:</strong> <input size="50" class="my" value="an input an input an input" />, <input size="5" class="your" value="an input" /><br />
+(try 'maxlen', 'maxval', etc., for 'input' in '$spec')
+
+<h6>Blockquotes</h6>
+
+<blockquote><div>abc</div></blockquote><br />
+<blockquote><div>abc<div>def</div></div></blockquote><br />
+<blockquote><div>abc</div><div>def</div></blockquote><br />
+<blockquote><div>abc<div>def</div>ghi</div></blockquote><br />
+abc<div>def</div>ghi<br />
+<blockquote><div>QQQ<div>x</div>&lt;!-- comment --&gt;</div></blockquote><br />
+<blockquote><div>x</div><div>&lt;!-- comment --&gt;QQQ</div></blockquote><br />
+<blockquote><div>&lt;!-- comment --&gt;<div>x</div>QQQ<div>x</div></div></blockquote><br />
+<blockquote><div>x&lt;!-- comment --&gt;</div><div>QQQ</div></blockquote><p>x</p><br />
+<br />
+(try with blockquote parent)
+
+<h6>CDATA sections</h6>
+
+<strong>Special characters inside:</strong> &lt;![CDATA[ ]]&gt; ]]&gt;, &lt;![CDATA[ 3 &lt; 4 &gt; 3.5, &amp; 4 &gt; 4 ]]&gt;<br />
+<strong>Normal:</strong> &lt;![CDATA[ check ]]&gt;, <em>CDATA follows:&lt;![CDATA[ check ]]&gt;</em><br />
+<strong>Malformed:</strong> &lt;![cdata check ]]&gt;, &lt; ![CDATA check ]]&gt;, &lt;![CDATA check ]]&gt;, &lt; ![CDATA check ] ]&gt;<br />
+<strong>Invalid:</strong> <em>&gt;CDATA in tag content</em>, <table>&lt;![CDATA[ check ]]&gt;<tr><td>text not allowed</td></tr></table>
+
+<h6>Complex-1: deprecated elements</h6>
+
+<div style="text-align: center;">
+The PHP <span style="text-decoration: line-through;">software</span> script used for this <span style="text-decoration: line-through;">web-page</span> webpage is <span style="font-weight: bold; font-size: 200%; color: red; font-family: arial;">htmLawedTest.php</span>, from <span style="color:green; text-decoration: underline;">PHP Labware</span>.
+</div>
+
+<h6>Complex-2: deprecated attributes</h6>
+
+<img src="s" alt="a" id="n" /><img src="s" alt="a" id="id9" />
+<br style="clear: left;" />
+<hr style="border-style: none; border: 0; background-color: gray; color: gray; size: 1px;" />
+<img src="s" alt="image" width="10em" height="20" style="padding:5px; float: left; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; border: 1px;" id="id10" />
+<table width="50em" style="margin: auto; background-color: red;">
+     <tr>
+      <td style="width: 20%;">
+       <div style="margin: auto;">
+        <h3 style="text-align: right;">Section</h3>
+        <p style="text-align: right;">Para</p>
+        <ol style="list-style-type: lower-latin;"><li><a name="x" id="x">First</a> <a name="x" id="id11">item</a></li></ol>
+       </div>
+      </td>
+      <td style="width: auto;">
+       <ol style="list-style-type: decimal;"><li>First item</li></ol>
+      </td>
+     </tr>
+    </table>
+<br style="clear: both;" />
+
+<h6>Complex-3: embed, object, area</h6>
+
+&lt;object width="425" height="350"&gt;&lt;param name="movie" value="http://www.youtube.com/v/ls7gi1VwdIQ" /&gt;&lt;/param&gt;&lt;embed src="http://www.youtube.com/v/ls7gi1VwdIQ" type="application/x-shockwave-flash" width="425" height="350"&gt;&lt;/embed&gt;&lt;/object&gt;<br />
+
+&lt;embed src="http://www.youtube.com/v/ls7gi1VwdIQ" type="application/x-shockwave-flash" width="425" height="350"&gt;&lt;/embed&gt;<br />
+
+&lt;object data="1.gif" type="image/gif" usemap="#map1"&gt;<map name="map1" id="map1">
+<p>navigate the site: <a href="1" shape="rect" coords="0,0,118,28">1</a> | <a href="3" shape="circle" coords="184,200,60">3</a> | <a href="4" shape="poly" coords="276,0,276,28,100,200,50,50,276,0">4</a></p>
+<area href="5" shape="rect" coords="0,0,118,28" alt="area" />
+</map>&lt;/object&gt;
+
+&lt;param name="name" /&gt;value&lt;/param&gt;
+
+&lt;object id="obj1"&gt;
+   &lt;param name="param1" /&gt;
+   &lt;object id="obj2"&gt;
+      &lt;param name="param2" /&gt;
+   &lt;/object&gt;
+&lt;/object&gt;
+
+<h6>Complex-4: nested and other tables</h6>
+
+<table border="1" style="background-color: red;"> <tr> <td> Cell </td> <td colspan="2" rowspan="2"> <table border="1" style="background-color: green;"> <tr> <td> Cell </td> <td colspan="2" rowspan="2"> </td> </tr> <tr> <td> Cell </td> </tr> <tr> <td> Cell </td> <td> Cell </td> <td> Cell </td> </tr> </table> </td> </tr> <tr> <td> Cell </td> </tr> <tr> <td> Cell </td> <td> Cell </td> <td> Cell </td> </tr> </table><br />
+<strong>PCDATA wrong:</strong> <table>Well<caption>Hello</caption></table><br />
+<strong>Missing tr:</strong> <table>&lt;td&gt;Well&lt;/td&gt;</table><br />
+
+<h6>Complex-5: pseudo, disallowed or non-HTML tags</h6>
+
+(Try different 'keep_bad' values)
+&lt;*&gt; Pseudotags &lt;*&gt;
+&lt;xml&gt;Non-HTML tag xml&lt;/xml&gt;
+<p>
+Disallowed tag p
+</p>
+<ul>Bad<li>OK</li></ul>
+
+<h6>Elements</h6>
+
+<strong>Unbalanced:</strong> <a href="h"><em>check</em></a>&lt;/em&gt;<br />
+<strong>Non-XHTML:</strong> <div><div style="text-align: center;"><ul></ul></div></div><br />
+<strong>Malformed:</strong> &lt; a href=""&gt;&lt;/a&gt;, <a href=""></a>, <a href=""></a>, <a href=""></a>, <a href="">&lt; /a&gt;, &lt; a href=""&gt;</a>, <img src="s" alt="a" />, <img src="s" alt="a" />, &lt;imgsrc="s" alt="a" /&gt;<br />
+<strong>Invalid:</strong> &lt;image src="s" alt="a" /&gt;<br />
+<strong>Empty:</strong> <img src="s" alt="a" />, <img src="s" alt="a" />&lt;/img&gt;, <img src="s" alt="a" />text&lt;/img&gt;<br />
+<strong>Content invalid:</strong> <a href="h">1</a><a>2</a>&lt;/a&gt;<br />
+<strong>Content invalid?:</strong> <form action="action"></form><br /> (try setting 'form' as parent)<br />
+<strong>Casing:</strong> <a href=""></a><br />
+<strong>Check for tidy:</strong> <br /><hr />&lt;/div&gt;<hr />&lt;/div&gt;<hr />&lt;/div&gt;<div>hi</div>
+
+<h6>Entities</h6>
+
+<strong>Special:</strong> &amp; 3 &lt; 2 &amp; 5&gt;4 and j &gt;i &gt;a &amp; i&lt;j&gt;a<br />
+<strong>Padding:</strong> &#66; &#66; &#x66; &#x66; &amp;#x003; &amp;#0003;<br />
+<strong>Malformed:</strong> &amp; #x27;, &amp;x27;, &#x27; &amp;TILDE;, &amp;tilde<br />
+<strong>Invalid:</strong> &amp;#x3;, &amp;#55296;, &amp;#03;, &amp;#1114112;, &amp;#xffff, &amp;bad;<br />
+<strong>Discouraged characters:</strong> &amp;#x7f;, &amp;#132;, &#64992;, &#1114110;<br />
+<strong>Context:</strong> '&gt;', &lt;?<br />
+<strong>Casing:</strong> &#x27;, &#x27;, &amp;TILDE;, &tilde;
+<br />
+(also check named-to-numeric and hexdec-to-decimal, and vice versa, conversions)
+
+<h6>Format</h6>
+
+<strong>Valid but ill-formatted:</strong> text &lt;!-- comment --&gt;
+text &lt;!--
+A   c  o  m  m  e  n  t --&gt;
+&lt;script&gt;
+	&lt;![CDATA[
+		code
+	]]&gt;
+&lt;/script&gt;&lt;!-- comment --&gt;&lt;![CDATA[ cdata ]]&gt; <a>text&lt;/b&gt; text&lt;pre id="none"&gt;p r e&lt;/pre&gt;
+<textarea rows="10" cols="50">text</textarea>	  <textarea rows="10" cols="50">
+	  text	text  
+</textarea>		text  text <br />&lt;hr /&gt;
+text <img src="none" alt="none" /> t<em class="none">e<strong>x</strong>t</em>
+text <img src="none" alt="none" /> 	<b>t<em> e <strong> x </strong> t</em></b>
+	</a><a href="a">	text <img src="none" alt="none" /> 	<b>t <em> e <strong> x </strong> t</em></b>
+	</a>
+<span style="background-color: yellow;">text <img src="none" alt="none" /> 	<b> <em> t e <strong> x </strong> t</em></b></span>
+&lt;script&gt;script&lt;/script&gt;
+<div>
+	<pre>p <a>r</a> e &lt;!-- comment --&gt; </pre>
+		<pre>
+				pre
+		</pre>
+</div>
+<div><div><table border="1" style="background-color: red;"><tr><td>Cell</td><td colspan="2" rowspan="2"><table border="1" style="background-color: green;"><tr><td>Cell</td><td colspan="2" rowspan="2"></td></tr><tr><td>Cell</td></tr><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr></table></td></tr><tr><td>Cell</td></tr><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr></table></div></div>
+(try to compact or beautify)
+
+<h6>Forms</h6>
+
+(note nesting of 'form', missing required attributes, etc.)<br />
+<form action="action"><div>
+&lt;script type="text/javascript"&gt;s&lt;/script&gt;
+<fieldset><legend>p</legend>l <input name="personal_lastname" type="text" tabindex="1" /></fieldset>
+<input name="h" type="checkbox" value="h" tabindex="20" /> h
+<textarea name="t" rows="10" cols="50">t</textarea>
+</div></form><form action="a" method="get"></form>&lt;/form&gt;<br />
+<form action="b" method="get"><p><input type="text" value="i" /></p></form><br />
+<form action="action"><div>B:<input type="text" value="b" />C:<input type="text" value="c" /></div></form><br />
+(try each of these lines separately)<br />
+<form action="a"><div>what<br />
+</div></form><form action="a"><div>what
+(try with container as div and as form)<br />
+</div></form><form action="action"><div>c <a>a</a> <b>b</b><input />&lt;script&gt;s&lt;/script&gt;
+
+<h6>HTML comments (also CDATA)</h6>
+
+<strong>Script inside:</strong> &lt;!--[if gte IE 4]&gt;
+&lt;SCRIPT&gt;alert('XSS');&lt;/SCRIPT&gt;
+&lt;![endif]--&gt;<br />
+<strong>Special characters inside: &lt;!-- &lt;![CDATA check ]]&gt; --&gt;, &lt;!-- 3 &lt; 4 &gt; 3.5, &amp; 4 &gt; 4 --&gt;, &lt;!-- che--ck --&gt;, &lt;!--[if !IE]&gt; &lt;--&gt;<a>c</a>&lt;!--&gt; &lt;![endif]--&gt;<br />
+<strong>Normal:</strong> &lt;!-- check --&gt;, &lt;!--check --&gt;, <em>comment:&lt;!-- check --&gt;</em>&lt;!-- check --&gt;, &lt;table&gt;&lt;!-- check --&gt;&lt;tr&gt;&lt;td&gt;text not allowed&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;<br />
+<strong>Malformed:</strong> &lt;![cdata check ]]&gt;, &lt; ![CDATA check ]]&gt;, &lt; ![CDATA check ] ]&gt;<br />
+Invalid:</strong> <em>&gt;comment in tag content</em>, &lt;!--check--&gt;
+
+<h6>HTML5</h6>
+
+<strong>figure and figcaption:</strong> &lt;figure&gt;<img src="picture.jpg" alt="picture" />&lt;figcaption&gt;Caption for the awesome picture&lt;/figcaption&gt;&lt;/figure&gt;
+<strong>article:</strong> <h1>A</h1><p>B</p>&lt;article&gt;<h2>C</h2>&lt;/article&gt;&lt;article&gt;<h2>E</h2><p>F</p><p>G</p>&lt;/article&gt;
+<strong>meter</strong>: <p>Heat &lt;meter min="100" max="200" value="150"&gt;150&lt;/meter&gt;.</p>
+<strong>datalist</strong>: <input />&lt;datalist id="b"&gt;&lt;option value="c"&gt;&lt;option value="d"&gt;&lt;/datalist&gt;
+
+<h6>Ins-Del</h6>
+
+(depending on context, these elements can be of either block or inline type)<br />
+<p><ins datetime="d" cite="c">&lt;div&gt;block</ins></p></div>&lt;/ins&gt;&lt;/p&gt;<div><br />
+<p><del>d</del></p><br />
+<p><ins><del>d</del></ins></p><div><ins><p><del>&lt;div&gt;d</del></p></ins></div>&lt;/del&gt;&lt;/p&gt;&lt;/ins&gt;</div><ins><div>d</div></ins>
+
+<h6>Lists</h6>
+
+<div><strong>Invalid character data</strong>: <ul><li>(item</li>)</ul><br />
+<strong>Definition list</strong>: <dl><dt>a</dt>bad<dd>first <em>one</em></dd><dt>b</dt><dd>second</dd></dl><br />
+<strong>Definition list, close-tags omitted</strong>: <dl><dt>a</dt>bad<dd>first <em>one</em></dd><dt>b</dt><dd>second</dd></dl><br />
+<strong>Definition lists, nested</strong>: <dl>
+ <dt>T1</dt>
+ <dd>D1</dd>
+ <dt>T2</dt>
+ <dd>D2<dl><dt>t1</dt><dd>d1</dd><dt>t2</dt><dd>d2</dd></dl></dd>
+ <dt>T3</dt>
+ <dd>D3</dd>
+ <dt>T4</dt>
+ <dd>D4<dl><dt>t1</dt><dd>d1</dd></dl></dd>
+</dl><br />
+<strong>Definition lists, nested, close-tags omitted</strong>: <dl>
+ <dt>T1
+ </dt><dd>D1</dd>
+ <dt>T2</dt>
+ <dd>D2<dl><dt>t1</dt><dd>d1</dd><dt>t2</dt><dd>d2</dd></dl></dd>
+ <dt>T3
+ </dt><dd>D3
+ </dd><dt>T4
+ </dt><dd>D4<dl><dt>t1</dt><dd>d1</dd></dl></dd>
+</dl><br />
+<strong>Nested</strong>: <ul>
+ <li>l1</li>
+ <li>l2<ol><li>lo1</li><li>lo2</li></ol></li>
+ <li>l3</li>
+ <li>l4<ol><li>lo3</li><li>lo4<ol><li>lo5</li></ol></li></ol></li>
+</ul><br />
+<strong>Nested, directly</strong>: <ul>
+ <li>l1</li>
+ &lt;ol&gt;l2&lt;/ol&gt;
+ <li>l3</li>
+</ul><br />
+<strong>Nested, close-tags omitted</strong>: <ul>
+ <li>l1</li>
+ <li>l2<ol><li>lo1</li><li>lo2</li></ol>
+ </li><li>l3
+ </li><li>l4<ol><li>lo3</li><li>lo4<ol><li>lo5</li></ol></li></ol>
+</li></ul><br />
+<strong>Complex</strong>:
+<ol>&lt;script&gt;&lt;/script&gt;<li><table><tr><td>
+<ul><li id="search" class="widget widget_search">			</li></ul></td></tr></table></li></ol></div></form><form id="searchform" method="get" action="http://kohei.us">
+			<div>
+
+			<input type="text" name="s" id="s" size="15" /><br />
+			<input type="submit" value="Search" />
+			</div>
+			</form>
+		&lt;/li&gt;&lt;/ul&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/li&gt;&lt;/ol&gt;
+<strong>Menu</strong>: <ul style="list-style-type: decimal;"><li><ul>
+      &lt;button type="button"&gt;New...&lt;/button&gt;
+    </ul></li><li><ul>&lt;button type="button"&gt;Cut...&lt;/button&gt;</ul></li>
+    </ul>
+
+<h6>Microdata</h6>
+
+<div> 
+I am <span>X</span> but people call me <span>Y</span>. 
+Find me at <a href="http://www.xy.com">www.xy.com</a>
+</div>
+
+<h6>Microsoft Word</h6>
+
+<strong>Proprietary tag</strong>: <p class="3DMsoNormal">&lt;o:p&gt;&nbsp;&lt;/o:p&gt;</p><br />
+<strong>XML declaration</strong>: &lt;?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /&gt;<br />
+<strong>XML-invalid character code-point (may not replicate)</strong>: <p class="3DMsoNormal">“Where is he?” asked both Mary – the one so lovely – and Jane.</p>
+
+<h6>Nesting</h6>
+
+<strong>Block or inline a</strong>: <p><a href="link">text</a></p><a href="link">&lt;div&gt;hi&lt;/div&gt;</a><br />
+
+<h6>Non-English text-1</h6>
+
+Inscrieţi-vă acum la a Zecea Conferinţă Internaţională<br />
+გთხოვთ ახლავე გაიაროთ რეგისტრაცია<br />
+večjezično računalništvo<br />
+<a title="อ.อ่าง">อ.อ่าง</a><br />
+<a title="הירשמו כעת לכנס">Зарегистрируйтесь сейчас
+на Десятую Международную Конференцию по</a><br />
+(this file should have utf-8 encoding; some characters may not be displayed because of missing fonts, etc.)
+
+<h6>Non-English text-2: entities</h6>
+
+&#29992;&#32479;&#19968;&#30721;<br />
+&#4306;&#4311;&#4334;&#4317;&#4309;&#4311;<br />
+Inscreva-se agora para a D&#233;cima Confer&#234;ncia Internacional Sobre O Unicode, realizada entre os dias 10 e 12 de mar&#231;o de 1997 em Mainz
+na Alemanha.
+
+<h6>Ruby</h6>
+
+(need compatible browser)<br />
+<ruby xml:lang="ja">
+  <rbc>
+    <rb>斎</rb>
+    <rb>藤</rb>
+    <rb>信</rb>
+    <rb>男</rb>
+  </rbc>
+  <rtc class="reading">
+    <rt>さい</rt>
+    <rt>とう</rt>
+    <rt>のぶ</rt>
+    <rt>お</rt>
+  </rtc>
+  <rtc class="annotation">
+    <rt xml:lang="en">W3C Associate Chairman</rt>
+  </rtc>
+</ruby><br />
+<ruby>
+  <rb>WWW</rb>
+  <rp>(</rp><rt>World Wide Web</rt><rp>)</rp>
+</ruby><br />
+<ruby>
+  A
+  <rp>(</rp><rt>aaa</rt><rp>)</rp>
+</ruby>
+
+
+<h6>Tables</h6>
+
+<strong>Omitted closing tags:</strong> <table>
+<colgroup><col style="x" /><col style="y" />
+</colgroup><thead>
+<tr><th>h1c1</th><th>h1c2
+</th></tr></thead><tbody>
+<tr><td>r1c1</td><td>r1c2
+</td></tr><tr><td>r2c1</td><td>r2c2
+</td></tr></tbody></table><br />
+<strong>Nested, omitted closing tags:</strong> <table>
+<colgroup><col style="x" /><col style="y" />
+</colgroup><thead>
+<tr><th>h1c1</th><th>h1c2
+</th></tr></thead><tbody>
+<tr><td>r1c1</td><td>r1c2<table>
+<colgroup><col style="x" /><col style="y" />
+</colgroup><thead>
+<tr><th>h1c1</th><th>h1c2
+</th></tr></thead><tbody>
+<tr><td>r1c1</td><td>r1c2
+</td></tr><tr><td>r2c1</td><td>r2c2
+</td></tr></tbody></table>
+</td></tr><tr><td>r2c1</td><td>r2c2
+</td></tr></tbody></table><br />
+
+<h6>Tag transformation</h6>
+<strong>Font element intended as 'inline' element:</strong> <p><span style="color: red;">hi</span></p><br />
+<strong>Font element intended as 'block' element:</strong> <div><span style="color: red;">&lt;div&gt;hi</span></div>&lt;/span&gt;&lt;/div&gt;<br />
+<strong>Font element intended as 'block' element:</strong> <div style="text-align: center;"><span style="color: red; font-family: serif, 'Times';">&lt;div&gt;hi</span></div><div>QQQ</div>&lt;/span&gt;&lt;/div&gt;<br />
+
+<h6>Tidy</h6>
+<strong>White-space handling:</strong> abc<em> def </em> ghi   abc <em>def</em> ghi
+
+<h6>URLs</h6>
+
+<strong>Relative and absolute:</strong> <a href="mailto:x"></a>, <a href="http://a.com/b/c/d.f"></a>, <a href="./../d.f"></a>, <a href="./d.f"></a>, <a href="d.f"></a>, <a href="#s"></a>, <a href="./../../d.f#s"></a><br />
+(try base URL value of 'http://a.com/b/')<br />
+<strong>CSS URLs:</strong> <div style="background-image: url('denied:a.gif');"></div>, <div style="background-image: URL(&quot;denied:a.gif&quot;);"></div>, <div style="background-image: url('denied:http://a.com/a.gif');"></div>, <div style="background-image: url('denied:./../a.gif');"></div>, <div style="background-image: url('denied:js:xss')"></div><br />
+<strong>Double URLs:</strong> <a style="behaviour: url(denied:foo) url(denied:http://example.com/xss.htc)">b</a><br />
+<strong>Anti-spam:</strong> (try regex for 'http://a.com', etc.) <a href="mailto:x@y.com"></a>, <a href="http://a.com/b@d.f"></a>, <a href="a.com/d.f" rel="nofollow"></a>, <a href="a.com/d.f" rel="1, 2"></a>, <a href="a.com/d.f"></a>, <a href="b.com/d.f"></a>, <a href="c.com/d.f">, </a><a href="denied:http://c.com/d.f"></a><br />
+<strong>Soft-hyphen:</strong> <a href="http://q=ídis c">ídis­c</a>
+
+<h6>XSS</h6>
+
+<img alt="&lt;img onmouseover=confirm(1)//" src="src" />
+'';!--"&lt;xss&gt;=&amp;{()}<br />
+<img src="denied:javascript%3Aalert('xss');" alt="image" /><br />
+<img src="denied:javascript:alert('xss');" alt="image" /><br />
+<img src="denied:java script:alert('xss');" alt="image" /><br />
+<img src="denied:&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;" alt="image" /><br />
+<span style="color: #FF6699'onmouseover='alert(1)//;">test</span>
+<span style="color: img//onerror='alert`www.ptsecurity.com`'src=Psych0tr1a;">
+&lt;div style="javascript:alert('xss');"&gt;&lt;/div&gt;<br />
+&lt;div style="background-image:url(denied:javascript:alert('xss'));"&gt;&lt;/div&gt;<br />
+&lt;div style="background-image:url(&quot;denied:javascript:alert('xss')&quot; );"&gt;&lt;/div&gt;<br />
+&lt;!--[if gte IE 4]&gt;&lt;script&gt;alert('xss');&lt;/script&gt;&lt;![endif]--&gt;<br />
+&lt;script a="&gt;" src="http://ha.ckers.org/xss.js"&gt;&lt;/script&gt;<br />
+&lt;div style="background-image: url('denied:js:xss')"&gt;&lt;/div&gt;<br />
+<a style=";-moz-binding:url(denied:http://lukasz.pilorz.net/xss/xss.xml#xss)" href="http://example.com">test</a><br />
+<strong>Bad IE7:</strong> <a href="http://x&amp;x=%22+style%3d%22background-image%3a+expression%28alert %28%27xss%3f%29%29">x</a><br />
+<strong>Opera:</strong> <a href="denied:\xE2\x80\x83javascript:alert(123)">link</a>
+<strong>Bad IE7:</strong> <a style="color:expr comment*/ession(alert(document.domain))">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: %45xpression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: expr%45ssion(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp  */ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp   */ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background: exp/ * * /ression(alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  x */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="xxx" style="background:  */ */ (alert('xss'));">xxx</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="width:  *** *;;;;;;*/  */(alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="padding:10px; background: */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="background: huh   */ */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> <a href="x" style="background: */ (alert('xss'));background: */ (alert('xss'));">x</a><br />
+<strong>Bad IE7:</strong> exp/*<a style="no ss:noxss(&quot;*/ &quot;);xss:ex XSS*/  /pression(alert(&quot;XSS&quot;))">x</a><br />
+<strong>Bad IE7:</strong> <a style="background:expre sion(alert('xss'));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="background:expre sion(alert('xss'));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="color:  065  078  070  072  065  073  073  069  06f  06e  028  061  06c  065  072  074  028  031  029  029">test</a><br />
+<strong>Bad IE7:</strong> <a style="xss:e #48;&#48;&#55;&#56;pression(window.x?0:(alert(/XSS/),window.x=1));">hi</a><br />
+<strong>Bad IE7:</strong> <a style="background:url('denied:java script:eval(document.all.mycode.expr)')">hi</a><br />
+
+&lt;h6&gt;Other&lt;/h6&gt;
+
+3 &lt; 4 <br />
+3 &gt; 4 <br />
+  &gt; 3 <br />
+&lt;._.&gt; hi! <br />
+&lt;&lt;&lt; ALERT &gt;&gt;&gt; <br />
+&lt;![if !vml]&gt; some stuff &lt;![endif]&gt; <br />
+&lt;?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /&gt; <br />
+&lt;uml:ns ns = "urn:www"&gt; <br />
+&lt;uml:ns ns = 'urn:www'&gt; <br />
+if(13&lt;age AND 21&gt;age){say 'teen'} <br />
+age &gt;51 and a smoking history of &gt;51 pack-years <b>was</b> <br />
+age &gt; 51 and a smoking history of &gt;51 pack-years <b>was</b> <br />
+age &lt;51 and a smoking history of &lt;51 pack-years &lt;b&gt;was&lt;/b&gt; <br />
+age &lt; 51 and a smoking history of &lt; 51 pack-years <b>was</b> <br />
+<b>age &gt;51 and a smoking history of &gt;51 pack-years</b> <br />
+<b>age &gt; 51 and a smoking history of &gt;51 pack-years</b> <br />
+<b>age &lt;51 and a smoking history of &lt;51 pack-years&lt;/b&gt; <br />
+<b>age &lt; 51 and a smoking history of &lt; 51 pack-years</b> <br />
+</b></span>
