@@ -9,6 +9,9 @@ module.exports = {
             "experimentalObjectRestSpread": true
         }
     },
+    "plugins": [
+      "no-regex-dot"
+    ],
     "rules": {
         "indent": [
             "error",
@@ -28,7 +31,7 @@ module.exports = {
         "no-empty": [
             "off"
         ],
-        "no-regex-dot": [
+        "no-regex-dot/no-regex-dot": [
             "error"
         ]
     }

@@ -13,10 +13,11 @@
   "dependencies": {
   },
   "devDependencies": {
-    "babel-cli": "^6.10.1",
-    "babel-plugin-transform-es2015-destructuring": "^6.9.0",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "eslint": "^3.0.0"
+    "babel-cli": "latest",
+    "babel-plugin-transform-es2015-destructuring": "latest",
+    "babel-plugin-transform-object-rest-spread": "latest",
+    "eslint": "latest",
+    "eslint-plugin-no-regex-dot": "latest"
   },
   "scripts": {
   }
