@@ -56,7 +56,7 @@ var htmLawed = module.exports =
         if (x == '-*')
             e = {};
         else if (x.indexOf('*') < 0)
-            e = htmLawed._flip(e.split(/,/));
+            e = htmLawed._flip(x.split(/,/));
         else if (x.length > 1)
         {
             var re = /(?:^|-|\+)[^\-+]+?(?=-|\+|$)/g;
@@ -218,8 +218,8 @@ var htmLawed = module.exports =
         cont.B = { 'blockquote':1, 'form':1, 'map':1, 'noscript':1 }; // Block
         cont.E = { 'area':1, 'br':1, 'col':1, 'embed':1, 'hr':1, 'img':1, 'input':1, 'isindex':1, 'param':1 }; // Empty
         cont.F = { 'button':1, 'del':1, 'div':1, 'dd':1, 'fieldset':1, 'iframe':1, 'ins':1, 'li':1, 'noscript':1, 'object':1, 'td':1, 'th':1 }; // Flow; later context-wise dynamic move of ins & del to cont.I
-        cont.I = { 'a':1, 'abbr':1, 'acronym':1, 'address':1, 'b':1, 'bdo':1, 'big':1, 'caption':1, 'cite':1, 'code':1, 'dfn':1, 'dt':1, 'em':1, 'font':1, 'h1':1, 'h2':1, 'h3':1, 'h4':1, 'h5':1, 'h6':1, 'i':1, 'kbd':1, 'label':1, 'legend':1, 'p':1, 'pre':1, 'q':1, 'rb':1, 'rt':1, 's':1, 'samp':1, 'small':1, 'span':1, 'strike':1, 'strong':1, 'sub':1, 'sup':1, 'tt':1, 'u':1, 'var':1 }; // Inline
-        cont.N = { 'a':{'a':1}, 'button':{'a':1, 'button':1, 'fieldset':1, 'form':1, 'iframe':1, 'input':1, 'label':1, 'select':1, 'textarea':1}, 'fieldset':{'fieldset':1}, 'form':{'form':1}, 'label':{'label':1}, 'noscript':{'script':1}, 'pre':{'big':1, 'font':1, 'img':1, 'object':1, 'script':1, 'small':1, 'sub':1, 'sup':1}, 'rb':{'ruby':1}, 'rt':{'ruby':1} }; // Illegal
+        cont.I = { 'style':1, 'a':1, 'abbr':1, 'acronym':1, 'address':1, 'b':1, 'bdo':1, 'big':1, 'caption':1, 'cite':1, 'code':1, 'dfn':1, 'dt':1, 'em':1, 'font':1, 'h1':1, 'h2':1, 'h3':1, 'h4':1, 'h5':1, 'h6':1, 'i':1, 'kbd':1, 'label':1, 'legend':1, 'p':1, 'pre':1, 'q':1, 'rb':1, 'rt':1, 's':1, 'samp':1, 'small':1, 'span':1, 'strike':1, 'strong':1, 'sub':1, 'sup':1, 'tt':1, 'u':1, 'var':1 }; // Inline
+        cont.N = { 'style':1, 'a':{'a':1}, 'button':{'a':1, 'button':1, 'fieldset':1, 'form':1, 'iframe':1, 'input':1, 'label':1, 'select':1, 'textarea':1}, 'fieldset':{'fieldset':1}, 'form':{'form':1}, 'label':{'label':1}, 'noscript':{'script':1}, 'pre':{'big':1, 'font':1, 'img':1, 'object':1, 'script':1, 'small':1, 'sub':1, 'sup':1}, 'rb':{'ruby':1}, 'rt':{'ruby':1} }; // Illegal
         cont.R = { 'blockquote':1, 'dir':1, 'dl':1, 'form':1, 'map':1, 'menu':1, 'noscript':1, 'ol':1, 'optgroup':1, 'rbc':1, 'rtc':1, 'ruby':1, 'select':1, 'table':1, 'tbody':1, 'tfoot':1, 'thead':1, 'tr':1, 'ul':1 };
         cont.S = { 'colgroup':{'col':1}, 'dir':{'li':1}, 'dl':{'dd':1, 'dt':1}, 'menu':{'li':1}, 'ol':{'li':1}, 'optgroup':{'option':1}, 'option':{'#pcdata':1}, 'rbc':{'rb':1}, 'rp':{'#pcdata':1}, 'rtc':{'rt':1}, 'ruby':{'rb':1, 'rbc':1, 'rp':1, 'rt':1, 'rtc':1}, 'select':{'optgroup':1, 'option':1}, 'script':{'#pcdata':1}, 'table':{'caption':1, 'col':1, 'colgroup':1, 'tfoot':1, 'tbody':1, 'tr':1, 'thead':1}, 'tbody':{'tr':1}, 'tfoot':{'tr':1}, 'textarea':{'#pcdata':1}, 'thead':{'tr':1}, 'tr':{'td':1, 'th':1}, 'ul':{'li':1} }; // Specific - immediate parent-child
         if (htmLawed.C.direct_list_nest)
@@ -229,7 +229,7 @@ var htmLawed = module.exports =
         // block/inline type; ins & del both type; #pcdata: text
         var el = {};
         el.B = { 'address':1, 'blockquote':1, 'center':1, 'del':1, 'dir':1, 'dl':1, 'div':1, 'fieldset':1, 'form':1, 'ins':1, 'h1':1, 'h2':1, 'h3':1, 'h4':1, 'h5':1, 'h6':1, 'hr':1, 'isindex':1, 'menu':1, 'noscript':1, 'ol':1, 'p':1, 'pre':1, 'table':1, 'ul':1 };
-        el.I = { '#pcdata':1, 'a':1, 'abbr':1, 'acronym':1, 'applet':1, 'b':1, 'bdo':1, 'big':1, 'br':1, 'button':1, 'cite':1, 'code':1, 'del':1, 'dfn':1, 'em':1, 'embed':1, 'font':1, 'i':1, 'iframe':1, 'img':1, 'input':1, 'ins':1, 'kbd':1, 'label':1, 'map':1, 'object':1, 'q':1, 'ruby':1, 's':1, 'samp':1, 'select':1, 'script':1, 'small':1, 'span':1, 'strike':1, 'strong':1, 'sub':1, 'sup':1, 'textarea':1, 'tt':1, 'u':1, 'var':1 };
+        el.I = { 'style':1, '#pcdata':1, 'a':1, 'abbr':1, 'acronym':1, 'applet':1, 'b':1, 'bdo':1, 'big':1, 'br':1, 'button':1, 'cite':1, 'code':1, 'del':1, 'dfn':1, 'em':1, 'embed':1, 'font':1, 'i':1, 'iframe':1, 'img':1, 'input':1, 'ins':1, 'kbd':1, 'label':1, 'map':1, 'object':1, 'q':1, 'ruby':1, 's':1, 'samp':1, 'select':1, 'script':1, 'small':1, 'span':1, 'strike':1, 'strong':1, 'sub':1, 'sup':1, 'textarea':1, 'tt':1, 'u':1, 'var':1 };
         el.N = { 'a':1, 'big':1, 'button':1, 'fieldset':1, 'font':1, 'form':1, 'iframe':1, 'img':1, 'input':1, 'label':1, 'object':1, 'ruby':1, 'script':1, 'select':1, 'small':1, 'sub':1, 'sup':1, 'textarea':1 }; // Exclude from specific ele; cont.N values
         el.O = { 'area':1, 'caption':1, 'col':1, 'colgroup':1, 'dd':1, 'dt':1, 'legend':1, 'li':1, 'optgroup':1, 'option':1, 'param':1, 'rb':1, 'rbc':1, 'rp':1, 'rt':1, 'rtc':1, 'script':1, 'tbody':1, 'td':1, 'tfoot':1, 'thead':1, 'th':1, 'tr':1 }; // Missing in el.B & el.I
         el.F = { ...el.B, ...el.I }; // FIXME <=> Object.assign({}, el.B, el.I)

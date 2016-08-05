@@ -22,3 +22,5 @@ while ((m = /^(\d+)\.\s*([^\n]+)\n\nInput code »\n([\s\S]*?)\n\nOutput code »\
         console.log("["+m[1]+"] "+m[2]+": NOT OK\n"+m[4]+"\n vs \n"+output);
     tests = tests.substr(m[0].length);
 }
+
+htmLawed.sanitize('<body><style>a { }</style> <img style="abc: 1">zhopa</img> <p>Hello &nbsp; world!</p></body>', { safe: 1, elements: '* +style', style_pass: true });
