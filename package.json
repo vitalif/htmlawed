@@ -1,14 +1,26 @@
 {
+  "name": "htmlawed",
+  "version": "1.0.0",
   "author": {
     "name": "Vitaliy Filippov",
     "email": "vitalif@yourcmc.ru",
     "url": "http://yourcmc.ru/wiki/"
   },
-  "name": "htmlawed",
   "description": "JS port of htmLawed HTML filter library",
+  "main": "htmLawed.js",
+  "files": [
+    "htmLawed.js",
+    "htmLawed.src.js",
+    "htmLawed.min.js",
+    "test.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/vitalif/htmlawed"
+  },
+  "homepage": "https://github.com/vitalif/htmlawed",
+  "bugs": {
+    "url": "https://github.com/vitalif/htmlawed/issues"
   },
   "dependencies": {
   },
@@ -16,9 +28,23 @@
     "babel-cli": "latest",
     "babel-plugin-transform-es2015-destructuring": "latest",
     "babel-plugin-transform-object-rest-spread": "latest",
+    "babel-plugin-transform-es2015-arrow-functions": "latest",
     "eslint": "latest",
     "eslint-plugin-no-regex-dot": "latest"
   },
   "scripts": {
-  }
+    "build": "eslint htmLawed.src.js && babel htmLawed.src.js > htmLawed.js",
+    "test": "nodejs test.js"
+  },
+  "keywords": [
+    "html",
+    "sanitizer"
+  ],
+  "license": "LGPL",
+  "maintainers": [
+    {
+      "name": "vitalif",
+      "email": "vitalif@yourcmc.ru"
+    }
+  ]
 }

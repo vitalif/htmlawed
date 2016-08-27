@@ -1,5 +1,5 @@
 const fs = require('fs');
-const htmLawed = require('./htmLawed.c.js');
+const htmLawed = require('./htmLawed.js');
 
 var out1 = htmLawed.sanitize(fs.readFileSync('htmLawed_TESTCASE.txt', { encoding: 'utf8' }), { safe: 1, keep_bad: 1 });
 var check1 = fs.readFileSync('htmLawed_TESTCASE_out.htm', { encoding: 'utf8' });
@@ -23,4 +23,7 @@ while ((m = /^(\d+)\.\s*([^\n]+)\n\nInput code »\n([\s\S]*?)\n\nOutput code »\
     tests = tests.substr(m[0].length);
 }
 
-htmLawed.sanitize('<body><style>a { }</style> <img style="abc: 1">zhopa</img> <p>Hello &nbsp; world!</p></body>', { safe: 1, elements: '* +style', style_pass: true });
+var src = '<body><style>a { }</style> <img style="abc: 1">zhopa</img> <p>Hello &nbsp; world!</p></body>';
+var res = '<style>a { }</style> <img style="abc: 1" src="src" alt="image" />zhopa <p>Hello &nbsp; world!</p>';
+var ok = htmLawed.sanitize(src, { safe: 1, elements: '* +style', style_pass: true });
+console.log("[STYLE_PASS] "+(ok ? "OK" : "NOT OK"));
