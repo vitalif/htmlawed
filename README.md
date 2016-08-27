@@ -24,13 +24,13 @@ http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/htmLawed_RE
 The most interesting options are:
 * `safe`: sanitize against most XSS
 * `elements`: space-delimited allowed HTML elements with '+' or '-' in front.
-  for example, `* +style` means "allow all standard elements and <style> element".
+  for example, `* +style` means "allow all standard elements and &lt;style&gt; element".
 * `keep_bad`: what to do with bad tags (6 is the default)
-** 0 = remove them
-** 1 = escape tags and element content (replace < > to &gt; &lt;)
-** 2 = remove tags, escape element content
-** 3, 4 = like 1, 2 but remove if text (#PCDATA) is invalid in parent element
-** 5, 6 = like 3, 4 but leave space characters in place
+ * 0 = remove them
+ * 1 = escape tags and element content (replace < > to &amp;lt; &amp;gt;)
+ * 2 = remove tags, escape element content
+ * 3, 4 = like 1, 2 but remove if text (#PCDATA) is invalid in parent element
+ * 5, 6 = like 3, 4 but leave space characters in place
 * `parent`: supposed parent element that will be wrapped around content
 * `tidy: -1 = compact/uglify HTML, 0 = no change (default), 1 = tify/beautify HTML
 * `abs_url`: -1 = make relative, 0 = no change (default), 1 = make absolute
