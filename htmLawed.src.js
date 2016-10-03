@@ -210,6 +210,7 @@ var htmLawed = module.exports =
     },
     hl_bal: function(t, keep_bad, intag)
     {
+        var C = htmLawed.C;
         if (keep_bad === undefined)
             keep_bad = 1;
         // balance tags
@@ -277,7 +278,7 @@ var htmLawed = module.exports =
         var _ob = '';
         var r, s, e, a, x, p;
         t = t.split('<');
-        for (var i = 0, ci = t.length; i < ci; i++)
+        for (var i = 0; i < t.length; i++)
         {
             // get markup
             r = /^(\/?)([a-z1-6]+)([^>]*)>([\s\S]*)$/.exec(t[i]);
@@ -296,7 +297,8 @@ var htmLawed = module.exports =
                     }
                     else if (p == e)
                     {
-                        q.pop();
+                        if (!cont.E[e])
+                            q.pop();
                         _ob += '</'+e+'>';
                         e = null;
                         // Last open
@@ -316,27 +318,52 @@ var htmLawed = module.exports =
                         e = null;
                     }
                 }
+                else if (!C.elements[e])
+                {
+                    // Forbidden tag not handled by hl_tag() - remove everything up to its end
+                    for (let j = i+1, _in = 1; j < t.length; j++)
+                    {
+                        r = /^(\/?)([a-z1-6]+)([^>]*)>/.exec(t[j]);
+                        if (r && r[2] == e)
+                        {
+                            _in += (r[1] ? -1 : 1);
+                        }
+                        if (_in <= 0)
+                        {
+                            t[j] = t[j].substr(r[0].length);
+                            t.splice(i, j-i);
+                            break;
+                        }
+                        else if (j == t.length-1)
+                        {
+                            t.splice(i, t.length-i);
+                            break;
+                        }
+                    }
+                    i--;
+                    continue;
+                }
                 // open tag
                 // cont.B ele needs el.B ele as child
                 else if (cont.B[e] && x.trim().length > 0) // FIXME trim
                 {
                     t[i] = e+a+'>';
                     t.splice(i+1, 0, 'div>'+x);
-                    ci++; i--;
+                    i--;
                     e = x = null;
                 }
-                else if (((ql && cont.B[p]) || (cont.B[intag] && !ql)) && !el.B[e] && !ok[e])
+                else if (((q.length && cont.B[p]) || (cont.B[intag] && !q.length)) && !el.B[e] && !ok[e])
                 {
                     t.splice(i, 0, 'div>');
-                    ci++; i--;
+                    i--;
                     e = x = null;
                 }
                 // if no open ele, intag = parent; mostly immediate parent-child relation should hold
-                else if (!ql || !el.N[e] || !q.filter(_k => cont.N[_k]).length)
+                else if (!q.length || !el.N[e] || !q.filter(_k => cont.N[_k]).length)
                 {
                     if (!ok[e])
                     {
-                        if (ql && cont.T[p])
+                        if (q.length && cont.T[p])
                         {
                             _ob += '</'+q.pop()+'>';
                             e = x = null;
@@ -864,8 +891,11 @@ var htmLawed = module.exports =
         var m = /^<(\/?)([a-zA-Z][a-zA-Z1-6]*)([^>]*?)\s?>$/m.exec(t);
         if (!m)
             return t.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        else if (!C.elements[e = m[2].toLowerCase()])
+        else if (!C.elements[e = m[2].toLowerCase()] && C.keep_bad > 0)
+        {
+            // C.keep_bad == 0 (remove bad elements with their content) is handled by hl_bal
             return (C.keep_bad%2) ? t.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+        }
         // attr string
         var a = m[3].trim().replace(/[\n\r\t]/g, ' ');
         // tag transform

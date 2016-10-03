@@ -5,21 +5,21 @@ var htmLawed = module.exports =
     _flip: function (a)
     {
         var e = {};
-        for (var i = 0; i < a.length; i++)
-        e[a[i]] = true;
+        for (var i = 0; i < a.length; i++) {
+            e[a[i]] = true;}
         return e;
     },
     _strtr: function (t, h)
     {
-        for (var i in h)
-        t = t.replace(new RegExp(i, 'g'), h[i]);
+        for (var i in h) {
+            t = t.replace(new RegExp(i, 'g'), h[i]);}
         return t;
     },
     _keys: function (h)
     {
         var r = [];
-        for (var i in h)
-        r.push(i);
+        for (var i in h) {
+            r.push(i);}
         return r;
     },
     _htmlspecialchars: function (t)
@@ -61,8 +61,8 @@ var htmLawed = module.exports =
         {
             var re = /(?:^|-|\+)[^\-+]+?(?=-|\+|$)/g;
             m = {};
-            while (v = re.exec(x))
-            m[v[0]] = true;
+            while (v = re.exec(x)) {
+                m[v[0]] = true;}
             for (v in m)
             {
                 if (v[0] == '+')
@@ -79,8 +79,8 @@ var htmLawed = module.exports =
         {
             delete x['on*'];
             v = { 'onblur': 1, 'onchange': 1, 'onclick': 1, 'ondblclick': 1, 'onfocus': 1, 'onkeydown': 1, 'onkeypress': 1, 'onkeyup': 1, 'onmousedown': 1, 'onmousemove': 1, 'onmouseout': 1, 'onmouseover': 1, 'onmouseup': 1, 'onreset': 1, 'onselect': 1, 'onsubmit': 1 };
-            for (i in v)
-            x[i] = true;
+            for (i in v) {
+                x[i] = true;}
         }
         C.deny_attribute = x;
         // config URL
@@ -142,8 +142,8 @@ var htmLawed = module.exports =
             y = { "\x82": '&#8218;', "\x84": '&#8222;', "\x91": '&#8216;', "\x92": '&#8217;', "\x93": '&#8220;', "\x94": '&#8221;' };else
 
             y = { "\x82": '\'', "\x84": '"', "\x91": '\'', "\x92": '\'', "\x93": '"', "\x94": '"' };
-            for (i in y)
-            x[i] = y[i];
+            for (i in y) {
+                x[i] = y[i];}
             t = htmLawed._strtr(t, x);
         }
         if (C.cdata || C.comment)
@@ -210,6 +210,7 @@ var htmLawed = module.exports =
     },
     hl_bal: function (t, keep_bad, intag)
     {
+        var C = htmLawed.C;
         if (keep_bad === undefined)
         keep_bad = 1;
         // balance tags
@@ -262,8 +263,8 @@ var htmLawed = module.exports =
             if (cont.N[intag])
             {
                 inOk = _extends({}, inOk);
-                for (var k in cont.N[intag])
-                delete inOk[k];
+                for (var k in cont.N[intag]) {
+                    delete inOk[k];}
             }
             return inOk;
         }
@@ -277,7 +278,7 @@ var htmLawed = module.exports =
         var _ob = '';
         var r, s, e, a, x, p;
         t = t.split('<');
-        for (var i = 0, ci = t.length; i < ci; i++)
+        for (var i = 0; i < t.length; i++)
         {
             // get markup
             r = /^(\/?)([a-z1-6]+)([^>]*)>([\s\S]*)$/.exec(t[i]);
@@ -296,6 +297,7 @@ var htmLawed = module.exports =
                         } else
                     if (p == e)
                     {
+                        if (!cont.E[e])
                         q.pop();
                         _ob += '</' + e + '>';
                         e = null;
@@ -315,6 +317,31 @@ var htmLawed = module.exports =
                         _ob += add + '</' + e + '>';
                         e = null;
                     }
+                } else
+                if (!C.elements[e])
+                {
+                    // Forbidden tag not handled by hl_tag() - remove everything up to its end
+                    for (var j = i + 1, _in = 1; j < t.length; j++)
+                    {
+                        r = /^(\/?)([a-z1-6]+)([^>]*)>/.exec(t[j]);
+                        if (r && r[2] == e)
+                        {
+                            _in += r[1] ? -1 : 1;
+                        }
+                        if (_in <= 0)
+                        {
+                            t[j] = t[j].substr(r[0].length);
+                            t.splice(i, j - i);
+                            break;
+                        } else
+                        if (j == t.length - 1)
+                        {
+                            t.splice(i, t.length - i);
+                            break;
+                        }
+                    }
+                    i--;
+                    continue;
                 }
                 // open tag
                 // cont.B ele needs el.B ele as child
@@ -322,21 +349,21 @@ var htmLawed = module.exports =
                         {
                             t[i] = e + a + '>';
                             t.splice(i + 1, 0, 'div>' + x);
-                            ci++;i--;
+                            i--;
                             e = x = null;
                         } else
-                    if ((ql && cont.B[p] || cont.B[intag] && !ql) && !el.B[e] && !ok[e])
+                    if ((q.length && cont.B[p] || cont.B[intag] && !q.length) && !el.B[e] && !ok[e])
                     {
                         t.splice(i, 0, 'div>');
-                        ci++;i--;
+                        i--;
                         e = x = null;
                     }
                     // if no open ele, intag = parent; mostly immediate parent-child relation should hold
-                    else if (!ql || !el.N[e] || !q.filter(function (_k) {return cont.N[_k];}).length)
+                    else if (!q.length || !el.N[e] || !q.filter(function (_k) {return cont.N[_k];}).length)
                         {
                             if (!ok[e])
                             {
-                                if (ql && cont.T[p])
+                                if (q.length && cont.T[p])
                                 {
                                     _ob += '</' + q.pop() + '>';
                                     e = x = null;
@@ -379,8 +406,8 @@ var htmLawed = module.exports =
                                     if (cont.N[d])
                                     {
                                         ok2 = _extends({}, ok2);
-                                        for (var _k in cont.N[d])
-                                        delete ok2[_k];
+                                        for (var _k in cont.N[d]) {
+                                            delete ok2[_k];}
                                     }
                                     if (!ok2[e])
                                     {
@@ -390,8 +417,8 @@ var htmLawed = module.exports =
                                             break;
                                         }
                                         add = '</' + d + '>';
-                                        while (++k < kc)
-                                        add = '</' + q[k] + '>' + add;
+                                        while (++k < kc) {
+                                            add = '</' + q[k] + '>' + add;}
                                         break;
                                     } else
 
@@ -444,8 +471,8 @@ var htmLawed = module.exports =
         }
 
         // end
-        while (e = q.pop())
-        _ob += '</' + e + '>';
+        while (e = q.pop()) {
+            _ob += '</' + e + '>';}
         return _ob;
         // eof
     },
@@ -532,8 +559,8 @@ var htmLawed = module.exports =
                 {
                     m = /^([a-zA-Z\d\-+\.]+:\/\/[^\/]+)([\s\S]*)/.exec(C.base_url);
                     p = (m[2] + p).replace(/\/\.\//g, '/');
-                    while (/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//.exec(p))
-                    p = p.replace(/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//g, '/');
+                    while (/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//.exec(p)) {
+                        p = p.replace(/\/([^\/]{3,}|[^\/\.]+?|\.[^\/\.]|[^\/\.]\.)\/\.\.\//g, '/');}
                     p = m[1] + p;
                 }
             }
@@ -864,8 +891,11 @@ var htmLawed = module.exports =
         var m = /^<(\/?)([a-zA-Z][a-zA-Z1-6]*)([^>]*?)\s?>$/m.exec(t);
         if (!m)
         return t.replace(/</g, '&lt;').replace(/>/g, '&gt;');else
-        if (!C.elements[e = m[2].toLowerCase()])
-        return C.keep_bad % 2 ? t.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+        if (!C.elements[e = m[2].toLowerCase()] && C.keep_bad > 0)
+        {
+            // C.keep_bad == 0 (remove bad elements with their content) is handled by hl_bal
+            return C.keep_bad % 2 ? t.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+        }
         // attr string
         var a = m[3].trim().replace(/[\n\r\t]/g, ' ');
         // tag transform
@@ -1026,9 +1056,9 @@ var htmLawed = module.exports =
         // rqd attr
         if (TAG.AR[e])
         {
-            for (k in TAG.AR[e])
-            if (!a[k])
-            a[k] = TAG.AR[e][k] || k;
+            for (k in TAG.AR[e]) {
+                if (!a[k])
+                a[k] = TAG.AR[e][k] || k;}
         }
 
         // depr attrs
@@ -1112,8 +1142,8 @@ var htmLawed = module.exports =
             delete a.id;else
 
             {
-                while (htmLawed.hl_Ids[a.id])
-                a.id = C.unique_ids + a.id; // FIXME 1 2 3 4 ... ?
+                while (htmLawed.hl_Ids[a.id]) {
+                    a.id = C.unique_ids + a.id;} // FIXME 1 2 3 4 ... ?
                 htmLawed.hl_Ids[a.id] = 1;
             }
         }
@@ -1134,8 +1164,8 @@ var htmLawed = module.exports =
         if (!C.hook_tag)
         {
             aA = '';
-            for (k in a)
-            aA += ' ' + k + '="' + a[k] + '"';
+            for (k in a) {
+                aA += ' ' + k + '="' + a[k] + '"';}
             return '<' + e + aA + (TAG.E[e] ? ' /' : '') + '>';
         }
         return C.hook_tag(e, a);

@@ -1,6 +1,6 @@
 {
   "name": "htmlawed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Vitaliy Filippov",
     "email": "vitalif@yourcmc.ru",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-cli": "latest",
     "babel-plugin-transform-es2015-destructuring": "latest",
+    "babel-plugin-transform-es2015-block-scoping": "latest",
     "babel-plugin-transform-object-rest-spread": "latest",
     "babel-plugin-transform-es2015-arrow-functions": "latest",
     "eslint": "latest",
