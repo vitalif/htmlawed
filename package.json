@@ -1,6 +1,6 @@
 {
   "name": "htmlawed",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "Vitaliy Filippov",
     "email": "vitalif@yourcmc.ru",
@@ -22,8 +22,7 @@
   "bugs": {
     "url": "https://github.com/vitalif/htmlawed/issues"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "latest",
     "babel-plugin-transform-es2015-destructuring": "latest",

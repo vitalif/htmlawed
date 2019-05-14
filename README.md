@@ -1,8 +1,12 @@
 # htmLawed
 
-This is a JS rewrite of a very good and safe htmLawed HTML sanitizer, http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
+This is a JS rewrite of a safe HTML sanitizer "htmLawed", http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/
 
 It is safe against almost all possible XSS vectors; see test cases in htmLawed_TESTCASE.txt and rsnake_xss.txt.
+
+Code is awful, but it works :D
+
+Version corresponds to 1.2.4.1
 
 ## Install
 

@@ -10,7 +10,7 @@ module.exports = {
         }
     },
     "plugins": [
-      "no-regex-dot"
+        "no-regex-dot"
     ],
     "rules": {
         "indent": [
@@ -29,6 +29,9 @@ module.exports = {
             "off"
         ],
         "no-empty": [
+            "off"
+        ],
+        "no-useless-escape": [
             "off"
         ],
         "no-regex-dot/no-regex-dot": [

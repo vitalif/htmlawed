@@ -1,9 +1,9 @@
 /*
-htmLawed_TESTCASE.txt, 27 February 2016
-htmLawed 1.1.22, 5 March 2016
+htmLawed_TESTCASE.txt, 11 February 2017
+To test htmLawed
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
-A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed
+A PHP Labware internal utility - www.bioinformatics.org/phplabware/internal_utilities/htmLawed
 */
 
 This file has UTF-8-encoded text with both correct and incorrect/malformed HTML/XHTML code snippets to test htmLawed (test cases/samples). The entire text may also be used as a unit.
@@ -28,7 +28,7 @@ character encoding to Unicode/UTF-8
 <strong>Deprecated:</strong> <a id="id7" target="self" name="n">a</a>, <hr style="border-style: none; border: 0; background-color: gray; color: gray;" /><br />
 <strong>Casing:</strong> <a href=""></a><br />
 <strong>Custom:</strong> <img alt="image" src="src" /><br />
-<strong>Data-*:</strong> <a>a</a><br />
+<strong>Data-*:</strong> <a data-xmnt="x" data-12="x" data-רש="x" data-xmxm="x">a</a><br />
 <strong>Admin-restricted?:</strong> <a href="x"></a>
 
 <h6>Attribute values</h6>
@@ -65,7 +65,7 @@ abc<div>def</div>ghi<br />
 <h6>Complex-1: deprecated elements</h6>
 
 <div style="text-align: center;">
-The PHP <span style="text-decoration: line-through;">software</span> script used for this <span style="text-decoration: line-through;">web-page</span> webpage is <span style="font-weight: bold; font-size: 200%; color: red; font-family: arial;">htmLawedTest.php</span>, from <span style="color:green; text-decoration: underline;">PHP Labware</span>.
+The PHP <span style="text-decoration: line-through;">software</span> script used for this <span style="text-decoration: line-through;">web-page</span> webpage is <span style="font-weight: bold; font-size: 200%; color: red; font-family: arial;">htmLawedTest.php</span>, from <u style="color:green">PHP Labware</u>.
 </div>
 
 <h6>Complex-2: deprecated attributes</h6>
@@ -73,18 +73,18 @@ The PHP <span style="text-decoration: line-through;">software</span> script used
 <img src="s" alt="a" id="n" /><img src="s" alt="a" id="id9" />
 <br style="clear: left;" />
 <hr style="border-style: none; border: 0; background-color: gray; color: gray; size: 1px;" />
-<img src="s" alt="image" width="10em" height="20" style="padding:5px; float: left; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; border: 1px;" id="id10" />
-<table width="50em" style="margin: auto; background-color: red;">
+<img src="s" alt="image" width="10em" height="20" border="1" style="padding:5px; float: left; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" id="id10" />
+<table style="width: 50em; margin: auto; background-color: red;">
      <tr>
       <td style="width: 20%;">
        <div style="margin: auto;">
         <h3 style="text-align: right;">Section</h3>
         <p style="text-align: right;">Para</p>
-        <ol style="list-style-type: lower-latin;"><li><a name="x" id="x">First</a> <a name="x" id="id11">item</a></li></ol>
+        <ol type="a" start="e"><li value="x"><a name="x" id="x">First</a> <a name="x" id="id11">item</a></li></ol>
        </div>
       </td>
       <td style="width: auto;">
-       <ol style="list-style-type: decimal;"><li>First item</li></ol>
+       <ol type="1"><li>First item</li></ol>
       </td>
      </tr>
     </table>
@@ -159,13 +159,13 @@ A   c  o  m  m  e  n  t --&gt;
 	&lt;![CDATA[
 		code
 	]]&gt;
-&lt;/script&gt;&lt;!-- comment --&gt;&lt;![CDATA[ cdata ]]&gt; <a>text&lt;/b&gt; text&lt;pre id="none"&gt;p r e&lt;/pre&gt;
-<textarea rows="10" cols="50">text</textarea>	  <textarea rows="10" cols="50">
+&lt;/script&gt;&lt;!-- comment --&gt;&lt;![CDATA[ cdata ]]&gt; <a>text&lt;/b&gt; text<pre id="none">p r e</pre>
+</a><textarea rows="10" cols="50">text</textarea>	  <textarea rows="10" cols="50">
 	  text	text  
-</textarea>		text  text <br />&lt;hr /&gt;
+</textarea>		text  text <br /><hr />
 text <img src="none" alt="none" /> t<em class="none">e<strong>x</strong>t</em>
 text <img src="none" alt="none" /> 	<b>t<em> e <strong> x </strong> t</em></b>
-	</a><a href="a">	text <img src="none" alt="none" /> 	<b>t <em> e <strong> x </strong> t</em></b>
+	<a href="a">	text <img src="none" alt="none" /> 	<b>t <em> e <strong> x </strong> t</em></b>
 	</a>
 <span style="background-color: yellow;">text <img src="none" alt="none" /> 	<b> <em> t e <strong> x </strong> t</em></b></span>
 &lt;script&gt;script&lt;/script&gt;
@@ -207,10 +207,10 @@ Invalid:</strong> <em>&gt;comment in tag content</em>, &lt;!--check--&gt;
 
 <h6>HTML5</h6>
 
-<strong>figure and figcaption:</strong> &lt;figure&gt;<img src="picture.jpg" alt="picture" />&lt;figcaption&gt;Caption for the awesome picture&lt;/figcaption&gt;&lt;/figure&gt;
-<strong>article:</strong> <h1>A</h1><p>B</p>&lt;article&gt;<h2>C</h2>&lt;/article&gt;&lt;article&gt;<h2>E</h2><p>F</p><p>G</p>&lt;/article&gt;
-<strong>meter</strong>: <p>Heat &lt;meter min="100" max="200" value="150"&gt;150&lt;/meter&gt;.</p>
-<strong>datalist</strong>: <input />&lt;datalist id="b"&gt;&lt;option value="c"&gt;&lt;option value="d"&gt;&lt;/datalist&gt;
+<strong>figure and figcaption:</strong> <figure><img src="picture.jpg" alt="picture" /><figcaption>Caption for the awesome picture</figcaption></figure>
+<strong>article:</strong> <h1>A</h1><p>B</p><article><h2>C</h2></article><article><h2>E</h2><p>F</p><p>G</p></article>
+<strong>meter</strong>: <p>Heat <meter min="100" max="200" value="150">150</meter>.</p>
+<strong>datalist</strong>: <input list="b" /><datalist id="b"><option value="c"></option><option value="d"></option></datalist>
 
 <h6>Ins-Del</h6>
 
@@ -267,21 +267,21 @@ Invalid:</strong> <em>&gt;comment in tag content</em>, &lt;!--check--&gt;
 			<div>
 
 			<input type="text" name="s" id="s" size="15" /><br />
-			<input type="submit" value="Search" />
+			<input type="submit" value="search" />
 			</div>
 			</form>
 		&lt;/li&gt;&lt;/ul&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/li&gt;&lt;/ol&gt;
-<strong>Menu</strong>: <ul style="list-style-type: decimal;"><li><ul>
+<strong>Menu</strong>: <menu type="toolbar"><li><menu label="File">
       &lt;button type="button"&gt;New...&lt;/button&gt;
-    </ul></li><li><ul>&lt;button type="button"&gt;Cut...&lt;/button&gt;</ul></li>
-    </ul>
+    </menu></li><li><menu label="Edit">&lt;button type="button"&gt;Cut...&lt;/button&gt;</menu></li>
+    </menu>
 
 <h6>Microdata</h6>
 
-<div> 
-I am <span>X</span> but people call me <span>Y</span>. 
-Find me at <a href="http://www.xy.com">www.xy.com</a>
+<div itemscope="itemscope" itemtype="http://data-vocabulary.org/Person"> 
+I am <span itemprop="name">X</span> but people call me <span itemprop="nickname">Y</span>. 
+Find me at <a href="http://www.xy.com" itemprop="url">www.xy.com</a>
 </div>
 
 <h6>Microsoft Word</h6>
@@ -292,7 +292,7 @@ Find me at <a href="http://www.xy.com">www.xy.com</a>
 
 <h6>Nesting</h6>
 
-<strong>Block or inline a</strong>: <p><a href="link">text</a></p><a href="link">&lt;div&gt;hi&lt;/div&gt;</a><br />
+<strong>Block or inline a</strong>: <p><a href="link">text</a></p><a href="link"><div>hi</div></a><br />
 
 <h6>Non-English text-1</h6>
 
